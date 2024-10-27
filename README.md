@@ -8,12 +8,12 @@ Flutter project by KBK group.
 
 ## Pembagian Tugas
 
-- Naufal Ammar -> Profile Page
-- Irham Baehaqi -> Login Page & Search Page
-- Helmy Farikh -> Product Page & Halaman Chat
-- Muhammad Faqih -> Home Page
-- Ayu Lestari -> Sell Page
-- Francisca Isabella -> Wishlist Page
+- Naufal Ammar -> Profile
+- Irham Baehaqi -> Login & Search
+- Helmy Farikh -> Halaman Produk & Chat
+- Muhammad Faqih -> Halaman Utama
+- Ayu Lestari -> Tambah Produk
+- Francisca Isabella -> Wishlist
 
 ## Getting Started
 
