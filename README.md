@@ -13,7 +13,7 @@ Flutter project by KBK group.
 - Helmy Farikh -> Halaman Produk & Chat
 - Muhammad Faqih -> Halaman Utama
 - Ayu Lestari -> Tambah Produk
-- Francisca Isabella -> Wishlist
+- Francisca Isabella -> Wishlist & Ulasan
 
 ## Getting Started
 
