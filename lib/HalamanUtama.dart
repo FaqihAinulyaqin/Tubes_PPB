@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ureveryday_ppb/Profile.dart';
+import ''; //import file disini
 
 class HalamanUtama extends StatefulWidget {
   const HalamanUtama({super.key});
@@ -179,7 +181,15 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                 Text('Item'),
                                 Container(
                                   padding: EdgeInsets.fromLTRB(50, 12, 50, 12),
-                                  child: Text('Buy Now'),
+                                  child: TextButton(
+                                    onPressed: (){
+                                      Navigator.push(
+                                        context, 
+                                        MaterialPageRoute(builder: (context) => Profile()) //Profile ganti ke class yang dituju
+                                        );
+                                    }, 
+                                    child: Text('Buy Now')
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(20)
@@ -205,7 +215,15 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                 Text('Item'),
                                 Container(
                                   padding: EdgeInsets.fromLTRB(50, 12, 50, 12),
-                                  child: Text('Buy Now'),
+                                  child: TextButton(
+                                    onPressed: (){
+                                      Navigator.push(
+                                        context, 
+                                        MaterialPageRoute(builder: (context) => Profile()) //Profile ganti ke class yang dituju
+                                        );
+                                    }, 
+                                    child: Text('Buy Now')
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(20)
