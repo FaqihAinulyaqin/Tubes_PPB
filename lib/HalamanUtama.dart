@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ureveryday_ppb/Profile.dart';
-import ''; //import file disini
+import 'halamanproduk.dart';
+import 'chat.dart';
 
 class HalamanUtama extends StatefulWidget {
   const HalamanUtama({super.key});
@@ -56,32 +57,44 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                       ],
                     ),
                     Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 20),
-                          child: Image.asset(
-                            'Images/Logo.png',
-                            height: 43,
-                            width: 74,
-                          )
-                        ),
-                      ],
-                    ),
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'Images/Logo.png',
+                        width: 73,
+                        height: 43,
+                      )
+                    ],
+                  ),
                     Row(
                       children: [
                         Container(
+                          width: 36,
+                          height: 36,
                           margin: EdgeInsets.only(right: 12),
-                          padding: EdgeInsets.all(5),
-                          child: Icon(Icons.notifications),
+                          child: Center(
+                            child: Icon(Icons.notifications,size: 20, color: Colors.black,),
+                          ),
                           decoration: BoxDecoration(
                             color: Color(0xFFC2D2E5),
                             borderRadius: BorderRadius.circular(180)
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.all(5),
+                          width: 36,
+                          height: 36,
                           margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.chat),
+                          child: Center(
+                            child: IconButton(
+                            onPressed: (){
+                              Navigator.push(
+                                context, 
+                                MaterialPageRoute(builder: (context) => Chat())
+                              );
+                            }, 
+                            icon: Icon(Icons.chat, size: 20,color: Colors.black,)
+                          ),
+                          ),
                           decoration: BoxDecoration(
                             color: Color(0xFFC2D2E5),
                             borderRadius: BorderRadius.circular(180)
@@ -179,15 +192,28 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text('Item'),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        'Jisoo\nNampyeon', 
+                                        style: TextStyle(fontSize: 11),
+                                      ),
+                                      Image.asset(
+                                        'Images/contohproduk.png',
+                                        width: 95,
+                                        height: 92,
+                                      ),
+                                    ],
+                                  ),
                                   Container(
                                     padding: EdgeInsets.all(10),
                                     child: TextButton(
                                       onPressed: (){
                                         Navigator.push(
                                           context, 
-                                          MaterialPageRoute(builder: (context) => Profile()) //Profile ganti ke class yang dituju
-                                          );
+                                          MaterialPageRoute(builder: (context) => Halamanproduk())
+                                        );
                                       }, 
                                       child: Text('Buy Now')
                                     ),
@@ -218,84 +244,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                     padding: EdgeInsets.all(10),
                                     child: TextButton(
                                       onPressed: (){
-                                        Navigator.push(
-                                          context, 
-                                          MaterialPageRoute(builder: (context) => Profile()) //Profile ganti ke class yang dituju
-                                          );
-                                      }, 
-                                      child: Text('Buy Now')
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20)
-                                    ),
-                                  )
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xFFC2D2E5),
-                                borderRadius: BorderRadius.circular(20) 
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 12,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              width: 173,
-                              height: 191,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text('Item'),
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: TextButton(
-                                      onPressed: (){
-                                        Navigator.push(
-                                          context, 
-                                          MaterialPageRoute(builder: (context) => Profile()) //Profile ganti ke class yang dituju
-                                          );
-                                      }, 
-                                      child: Text('Buy Now')
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20)
-                                    ),
-                                  )
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xFFC2D2E5),
-                                borderRadius: BorderRadius.circular(20) 
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              width: 173,
-                              height: 191,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text('Item'),
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: TextButton(
-                                      onPressed: (){
-                                        Navigator.push(
-                                          context, 
-                                          MaterialPageRoute(builder: (context) => Profile()) //Profile ganti ke class yang dituju
-                                          );
+                                        
                                       }, 
                                       child: Text('Buy Now')
                                     ),
@@ -332,10 +281,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                     padding: EdgeInsets.all(10),
                                     child: TextButton(
                                       onPressed: (){
-                                        Navigator.push(
-                                          context, 
-                                          MaterialPageRoute(builder: (context) => Profile()) //Profile ganti ke class yang dituju
-                                          );
+                                        
                                       }, 
                                       child: Text('Buy Now')
                                     ),
@@ -366,10 +312,75 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                     padding: EdgeInsets.all(10),
                                     child: TextButton(
                                       onPressed: (){
-                                        Navigator.push(
-                                          context, 
-                                          MaterialPageRoute(builder: (context) => Profile()) //Profile ganti ke class yang dituju
-                                          );
+                                        
+                                      }, 
+                                      child: Text('Buy Now')
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20)
+                                    ),
+                                  )
+                                ],
+                              ),
+                              decoration: BoxDecoration(
+                                color: Color(0xFFC2D2E5),
+                                borderRadius: BorderRadius.circular(20) 
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              width: 173,
+                              height: 191,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text('Item'),
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    child: TextButton(
+                                      onPressed: (){
+                                        
+                                      }, 
+                                      child: Text('Buy Now')
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20)
+                                    ),
+                                  )
+                                ],
+                              ),
+                              decoration: BoxDecoration(
+                                color: Color(0xFFC2D2E5),
+                                borderRadius: BorderRadius.circular(20) 
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Container(
+                              width: 173,
+                              height: 191,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text('Item'),
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    child: TextButton(
+                                      onPressed: (){
+                                        
                                       }, 
                                       child: Text('Buy Now')
                                     ),
