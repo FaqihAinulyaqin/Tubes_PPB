@@ -1,6 +1,9 @@
+// ignore_for_file: sort_child_properties_last
+
 import 'package:flutter/material.dart';
 import 'package:ureveryday_ppb/Profile.dart';
-import ''; //import file disini
+
+import 'halamanproduk.dart';
 
 class HalamanUtama extends StatefulWidget {
   const HalamanUtama({super.key});
@@ -29,7 +32,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                   Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: 20),
+                        margin: EdgeInsets.only(left: 20, top: 12),
                         child: IconButton(
                           icon: Icon(Icons.menu),
                           onPressed: () {
@@ -55,33 +58,32 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                     ],
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 20),
-                        child: Text(
-                          'UREveryday',
-                          style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                      Image.asset(
+                        'Images/Logo.png',
+                        width: 73,
+                        height: 43,
+                      )
                     ],
                   ),
                   Row(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(right: 12),
+                        margin: EdgeInsets.only(right: 12, top: 12),
                         padding: EdgeInsets.all(5),
                         child: Icon(Icons.notifications),
                         decoration: BoxDecoration(
-                          color: Colors.grey,
+                          color: Color(0xFFC2D2E5),
                           borderRadius: BorderRadius.circular(180)
                         ),
                       ),
                       Container(
                         padding: EdgeInsets.all(5),
-                        margin: EdgeInsets.only(right: 20),
+                        margin: EdgeInsets.only(right: 20, top: 12),
                         child: Icon(Icons.chat),
                         decoration: BoxDecoration(
-                          color: Colors.grey,
+                          color: Color(0xFFC2D2E5),
                           borderRadius: BorderRadius.circular(180)
                         ),
                       )
@@ -185,7 +187,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                     onPressed: (){
                                       Navigator.push(
                                         context, 
-                                        MaterialPageRoute(builder: (context) => Profile()) //Profile ganti ke class yang dituju
+                                        MaterialPageRoute(builder: (context) => Halamanproduk()),
                                         );
                                     }, 
                                     child: Text('Buy Now')

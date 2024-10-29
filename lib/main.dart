@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'HalamanUtama.dart';
-import 'Wishlist.dart';
-import 'Sell.dart';
 import 'Profile.dart';
+import 'Sell.dart';
+import 'Wishlist.dart';
 
 void main() {
   runApp(const MyApp());
@@ -67,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 borderRadius: BorderRadius.circular(30),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black26,
+                    color: Colors.transparent,
                     blurRadius: 8,
                     offset: Offset(0, 4),
                   ),
