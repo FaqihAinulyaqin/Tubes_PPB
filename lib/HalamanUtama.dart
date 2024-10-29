@@ -63,7 +63,28 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                       ),
                     ],
                   ),
-                  SizedBox(width: 100,)
+                  Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 12),
+                        padding: EdgeInsets.all(5),
+                        child: Icon(Icons.notifications),
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(180)
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        margin: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.chat),
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(180)
+                        ),
+                      )
+                    ],
+                  )
                 ],
               ),
             ),
