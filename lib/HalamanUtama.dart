@@ -9,7 +9,12 @@ class HalamanUtama extends StatefulWidget {
 
 class _HalamanUtamaState extends State<HalamanUtama> {
   String? selectedCategory;
-  final List<String> categories = ['Category', 'Category', 'Category', 'Category'];
+  final List<String> categories = [
+    'Category',
+    'Category',
+    'Category',
+    'Category'
+  ];
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -58,18 +63,23 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                         margin: EdgeInsets.only(left: 20),
                         child: Text(
                           'UREveryday',
-                          style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 36, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(width: 100,)
+                  SizedBox(
+                    width: 100,
+                  )
                 ],
               ),
             ),
             Row(
               children: [
-                SizedBox(height: 20,)
+                SizedBox(
+                  height: 20,
+                )
               ],
             ),
             Row(
@@ -87,7 +97,8 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                           filled: true,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.black, width: 1),
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 1),
                           ),
                         ),
                       ),
@@ -99,7 +110,10 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                     Container(
                       margin: EdgeInsets.only(right: 20),
                       padding: EdgeInsets.all(10),
-                      child: Icon(Icons.search, weight: 24,),
+                      child: Icon(
+                        Icons.search,
+                        weight: 24,
+                      ),
                       decoration: BoxDecoration(
                         border: Border.all(width: 1, color: Colors.transparent),
                         borderRadius: BorderRadius.circular(180),
@@ -112,7 +126,9 @@ class _HalamanUtamaState extends State<HalamanUtama> {
             ),
             Row(
               children: [
-                SizedBox(height: 20,)
+                SizedBox(
+                  height: 20,
+                )
               ],
             ),
             Row(
@@ -125,7 +141,12 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text('Promo', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold), textAlign: TextAlign.center,)
+                      Text(
+                        'Promo',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      )
                     ],
                   ),
                   decoration: BoxDecoration(
@@ -137,7 +158,9 @@ class _HalamanUtamaState extends State<HalamanUtama> {
             ),
             Row(
               children: [
-                SizedBox(height: 20,)
+                SizedBox(
+                  height: 20,
+                )
               ],
             ),
             Container(
@@ -160,16 +183,14 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                   padding: EdgeInsets.fromLTRB(50, 12, 50, 12),
                                   child: Text('Buy Now'),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20)
-                                  ),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20)),
                                 )
                               ],
                             ),
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 194, 210, 229),
-                              borderRadius: BorderRadius.circular(20) 
-                            ),
+                                color: Color.fromARGB(255, 194, 210, 229),
+                                borderRadius: BorderRadius.circular(20)),
                           ),
                         ],
                       ),
@@ -186,16 +207,14 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                   padding: EdgeInsets.fromLTRB(50, 12, 50, 12),
                                   child: Text('Buy Now'),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20)
-                                  ),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20)),
                                 )
                               ],
                             ),
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 194, 210, 229),
-                              borderRadius: BorderRadius.circular(20) 
-                            ),
+                                color: Color.fromARGB(255, 194, 210, 229),
+                                borderRadius: BorderRadius.circular(20)),
                           ),
                         ],
                       ),
