@@ -176,7 +176,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                         Column(
                           children: [
                             Container(
-                              width: 173,
+                              width: MediaQuery.of(context).size.width / 2.3,
                               height: 191,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -190,8 +190,8 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                       ),
                                       Image.asset(
                                         'Images/contohproduk.png',
-                                        width: 95,
-                                        height: 92,
+                                        width: 85,
+                                        height: 90,
                                       ),
                                     ],
                                   ),
@@ -204,7 +204,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                           MaterialPageRoute(builder: (context) => Halamanproduk())
                                         );
                                       }, 
-                                      child: Text('Buy Now')
+                                      child: Text('Buy Now', style: TextStyle(color: Colors.black))
                                     ),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -223,7 +223,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                         Column(
                           children: [
                             Container(
-                              width: 173,
+                              width: MediaQuery.of(context).size.width / 2.3,
                               height: 191,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -235,75 +235,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                       onPressed: (){
                                         
                                       }, 
-                                      child: Text('Buy Now')
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20)
-                                    ),
-                                  )
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xFFC2D2E5),
-                                borderRadius: BorderRadius.circular(20) 
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 12,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              width: 173,
-                              height: 191,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text('Item'),
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: TextButton(
-                                      onPressed: (){
-                                        
-                                      }, 
-                                      child: Text('Buy Now')
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20)
-                                    ),
-                                  )
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xFFC2D2E5),
-                                borderRadius: BorderRadius.circular(20) 
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              width: 173,
-                              height: 191,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text('Item'),
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: TextButton(
-                                      onPressed: (){
-                                        
-                                      }, 
-                                      child: Text('Buy Now')
+                                      child: Text('Buy Now', style: TextStyle(color: Colors.black))
                                     ),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -328,7 +260,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                         Column(
                           children: [
                             Container(
-                              width: 173,
+                              width: MediaQuery.of(context).size.width / 2.3,
                               height: 191,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -340,7 +272,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                       onPressed: (){
                                         
                                       }, 
-                                      child: Text('Buy Now')
+                                      child: Text('Buy Now', style: TextStyle(color: Colors.black))
                                     ),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -359,7 +291,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                         Column(
                           children: [
                             Container(
-                              width: 173,
+                              width: MediaQuery.of(context).size.width / 2.3,
                               height: 191,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -371,7 +303,75 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                       onPressed: (){
                                         
                                       }, 
-                                      child: Text('Buy Now')
+                                      child: Text('Buy Now', style: TextStyle(color: Colors.black))
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20)
+                                    ),
+                                  )
+                                ],
+                              ),
+                              decoration: BoxDecoration(
+                                color: Color(0xFFC2D2E5),
+                                borderRadius: BorderRadius.circular(20) 
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width / 2.3,
+                              height: 191,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text('Item'),
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    child: TextButton(
+                                      onPressed: (){
+                                        
+                                      }, 
+                                      child: Text('Buy Now', style: TextStyle(color: Colors.black))
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20)
+                                    ),
+                                  )
+                                ],
+                              ),
+                              decoration: BoxDecoration(
+                                color: Color(0xFFC2D2E5),
+                                borderRadius: BorderRadius.circular(20) 
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width / 2.3,
+                              height: 191,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text('Item'),
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    child: TextButton(
+                                      onPressed: (){
+                                        
+                                      }, 
+                                      child: Text('Buy Now', style: TextStyle(color: Colors.black))
                                     ),
                                     decoration: BoxDecoration(
                                       color: Colors.white,

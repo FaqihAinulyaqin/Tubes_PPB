@@ -25,34 +25,6 @@ class _SellState extends State<Sell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 20.0),
-          child: Container(
-            width: 40.0,
-            height: 40.0,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: const Color(0xFFC2D2E6),
-            ),
-            child: Center( 
-              child: IconButton(
-                icon: const Icon(Icons.keyboard_arrow_left_outlined, color: Color.fromARGB(255, 0, 0, 0)), 
-                padding: EdgeInsets.only(left: 0.0), 
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          ),
-        ),
-        title: Text(
-          'Add Product',
-          style: GoogleFonts.inter(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),

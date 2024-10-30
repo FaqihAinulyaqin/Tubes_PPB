@@ -204,7 +204,7 @@ class _HalamanprodukState extends State<Halamanproduk> {
                     width: 55,
                   ),
                 ),
-
+            
                 // Nama Penjual
                 const Padding(
                   padding: EdgeInsets.only(right: 80),
@@ -216,7 +216,7 @@ class _HalamanprodukState extends State<Halamanproduk> {
                     ),
                   ),
                 ),
-
+            
                 // Ulasan Penjual
                 Padding(
                   padding: const EdgeInsets.only(right: 20),
@@ -224,7 +224,7 @@ class _HalamanprodukState extends State<Halamanproduk> {
                     'Images/Bintang.png',
                     alignment: Alignment.centerRight,
                     height: 20,
-                    width: 115,
+                    width: 115 - 24,
                   ),
                 )
               ],
@@ -249,7 +249,7 @@ class _HalamanprodukState extends State<Halamanproduk> {
                         borderRadius: BorderRadius.circular(35),
                         color: Colors.black
                       ),
-                      width: 314,
+                      width: 314 - 45,
                       height: 56,
                       alignment: Alignment.center,
                       child: const Text(
