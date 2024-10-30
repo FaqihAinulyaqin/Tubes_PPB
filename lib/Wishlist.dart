@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ureveryday_ppb/HalamanUtama.dart';
 
 class Wishlist extends StatefulWidget {
   const Wishlist({super.key});
@@ -138,44 +139,54 @@ class _WishlistState extends State<Wishlist> {
               for (int i = 0; i < products.length; i++)
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.asset(products[i]["image"],
-                          width: 80, height: 80, fit: BoxFit.cover),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              products[i]["name"],
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              products[i]["category"],
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                            Text(
-                              products[i]["price"],
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              products[i]["bundle"],
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.grey),
-                            ),
-                          ],
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => halamanproduk(),
                         ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.favorite),
-                        onPressed: () {},
-                      ),
-                    ],
+                      );
+                    },
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset(products[i]["image"],
+                            width: 80, height: 80, fit: BoxFit.cover),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                products[i]["name"],
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                products[i]["category"],
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                              Text(
+                                products[i]["price"],
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                products[i]["bundle"],
+                                style:
+                                    TextStyle(fontSize: 14, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.favorite),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
                   ),
                 ),
             ],
