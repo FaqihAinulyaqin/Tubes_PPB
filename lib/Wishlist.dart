@@ -134,57 +134,48 @@ class _WishlistState extends State<Wishlist> {
           ),
           SizedBox(height: 10),
           Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               for (int i = 0; i < products.length; i++)
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    // width: 200,
-                    // height: 80,
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Image.asset(products[i]["image"],
-                            width: 80, height: 80, fit: BoxFit.cover),
-                        const SizedBox(width: 10),
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                products[i]["name"],
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
-                              Text(
-                                products[i]["category"],
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600),
-                                textAlign: TextAlign.center,
-                              ),
-                              Text(
-                                products[i]["price"],
-                                style: const TextStyle(fontSize: 14),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                products[i]["bundle"],
-                                style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Color.fromARGB(255, 131, 131, 131)),
-                                textAlign: TextAlign.center,
-                              ),
-                            ]),
-                        const SizedBox(width: 10),
-                        IconButton(
-                          icon: Icon(Icons.heart_broken),
-                          onPressed: () {},
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset(products[i]["image"],
+                          width: 80, height: 80, fit: BoxFit.cover),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              products[i]["name"],
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              products[i]["category"],
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
+                            Text(
+                              products[i]["price"],
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              products[i]["bundle"],
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.grey),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.favorite),
+                        onPressed: () {},
+                      ),
+                    ],
                   ),
                 ),
             ],
