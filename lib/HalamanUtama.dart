@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ureveryday_ppb/Profile.dart';
+import 'package:ureveryday_ppb/search.dart';
 import 'halamanproduk.dart';
 import 'chat.dart';
 
@@ -13,7 +13,6 @@ class HalamanUtama extends StatefulWidget {
 class _HalamanUtamaState extends State<HalamanUtama> {
   String? selectedCategory;
   final List<String> categories = ['Category', 'Category', 'Category', 'Category'];
-  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -112,39 +111,29 @@ class _HalamanUtamaState extends State<HalamanUtama> {
               ),
               Row(
                 children: [
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 20, right: 10),
-                        width: MediaQuery.of(context).size.width - 100,
-                        child: TextField(
-                          controller: searchController,
-                          decoration: InputDecoration(
-                            hintText: 'Search...',
-                            fillColor: Colors.white,
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: Colors.black, width: 1),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(right: 20),
-                        padding: EdgeInsets.all(10),
-                        child: Icon(Icons.search, weight: 24,),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(180),
-                          color: Color(0xFFD9D9D9),
-                        ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20, right: 10),
+                    width: MediaQuery.of(context).size.width - 40,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(builder: (context) => search())
+                        );
+                      }, 
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Search'),
+                          Icon(Icons.search)
+                        ],
                       )
-                    ],
-                  )
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 1),
+                      borderRadius: BorderRadius.circular(20)
+                    ),
+                  ),
                 ],
               ),
               Row(

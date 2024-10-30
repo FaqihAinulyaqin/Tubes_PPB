@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'HalamanUtama.dart';
+import 'Navbar.dart';
 import 'chat.dart';
 
 class Halamanproduk extends StatefulWidget {
@@ -48,7 +48,7 @@ class _HalamanprodukState extends State<Halamanproduk> {
                             onPressed: () {
                               Navigator.push(
                                 context, 
-                                MaterialPageRoute(builder: (context) => const HalamanUtama()),
+                                MaterialPageRoute(builder: (context) => const Navbar()),
                               );
                             },
                           ),
