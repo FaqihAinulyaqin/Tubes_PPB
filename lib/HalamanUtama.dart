@@ -207,7 +207,9 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  Halamanproduk()),
+                                                  Halamanproduk(
+                                                    product: {},
+                                                  )),
                                         );
                                       },
                                       child: Text('Buy Now')),
