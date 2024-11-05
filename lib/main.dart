@@ -44,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Sell(),
     Wishlist(),
     Profile(),
+    Ulasan()
   ];
 
   void _onItemTapped(int index) {

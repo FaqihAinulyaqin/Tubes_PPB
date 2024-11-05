@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'HalamanUtama.dart';
 import 'halamanproduk.dart';
 
@@ -10,6 +11,8 @@ class Ulasan extends StatefulWidget {
 }
 
 class _UlasanState extends State<Ulasan> {
+  double _currentRating = 3;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,10 +120,31 @@ class _UlasanState extends State<Ulasan> {
               ),
               SizedBox(height: 10),
 
-              Image.asset(
-                'Images/Bintang.png',
-                height: 20,
-                width: 115,
+              RatingBar(
+                minRating: 1,
+                maxRating: 5,
+                initialRating: _currentRating,
+                allowHalfRating: true,
+                onRatingUpdate: (rating) {
+                  setState(() {
+                    _currentRating = rating;
+                  });
+                },
+                glowColor: const Color.fromARGB(255, 153, 172, 235),
+                glowRadius: 5,
+                itemSize: 36,
+                tapOnlyMode: true,
+                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                ratingWidget: RatingWidget(
+                    full: Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    half: Icon(Icons.star, color: Colors.amber),
+                    empty: Icon(
+                      Icons.star,
+                      color: const Color.fromARGB(255, 82, 96, 126),
+                    )),
               ),
               SizedBox(height: 30),
               ElevatedButton(
