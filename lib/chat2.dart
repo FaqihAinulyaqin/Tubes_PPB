@@ -204,7 +204,11 @@ class ChatInputField extends StatelessWidget {
                   id: 2,
                   channelKey: "Basic_Channel",
                   title: "JisooNampyeon",
+<<<<<<< HEAD
                   body: "Nilai A ya pak"
+=======
+                  body: "Bayar hutangmu nak"
+>>>>>>> 3454eb3e39584a50c75b0cc0ac20c3a9fcf197ed
                 )
               );
             },
