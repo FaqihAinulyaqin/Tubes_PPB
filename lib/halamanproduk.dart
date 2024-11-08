@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'HalamanUtama.dart';
+import 'Navbar.dart';
 import 'chat.dart';
 import 'Ulasan.dart';
 
@@ -45,15 +45,7 @@ class Halamanproduk extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-<<<<<<< HEAD
                                   builder: (context) => const Navbar(),
-=======
-<<<<<<< HEAD
-                                  builder: (context) => const Navbar(),
-=======
-                                  builder: (context) => const HalamanUtama(),
->>>>>>> 3454eb3e39584a50c75b0cc0ac20c3a9fcf197ed
->>>>>>> 172bd2205ea53f40df42de01836022febc5b8b99
                                 ),
                               );
                             },

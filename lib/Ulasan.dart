@@ -121,15 +121,7 @@ class _UlasanState extends State<Ulasan> {
 
               RatingBar(
                 minRating: 1,
-<<<<<<< HEAD
                 maxRating: 4,
-=======
-<<<<<<< HEAD
-                maxRating: 4,
-=======
-                maxRating: 5,
->>>>>>> 3454eb3e39584a50c75b0cc0ac20c3a9fcf197ed
->>>>>>> 172bd2205ea53f40df42de01836022febc5b8b99
                 initialRating: _currentRating,
                 allowHalfRating: true,
                 onRatingUpdate: (rating) {
