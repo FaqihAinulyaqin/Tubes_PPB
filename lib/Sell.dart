@@ -1,235 +1,137 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'search.dart';
+import 'Navbar.dart';
 
-class Sell extends StatefulWidget {
+class Sell extends StatelessWidget {
   const Sell({super.key});
-
-  @override
-  _SellState createState() => _SellState();
-}
-
-class _SellState extends State<Sell> {
-  String? selectedCategory;
-  final List<String> categories = [
-    'Women Outfit',
-    'Men Outfit',
-    'Health & Beauty',
-    'Electronics',
-    'Smartphones',
-    'Books & Stationery',
-    'Babies & Kids',
-    'Luxury',
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Container(
-            width: 400,
-            padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Product Image',
-                  style: GoogleFonts.inter(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              const Center(
+                child: Text(
+                  'Punya barang tak terpakai? Jual disini aja!',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 17.0),
-            
-                Container(
-                  height: 46,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Image tag...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.black),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(3, (index) {
+                  return Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add, color: Colors.grey),
+                          Text(
+                            'gambar produk',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
+                        ],
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.blue),
-                      ),
+                    ),
+                  );
+                }),
+              ),
+              const SizedBox(height: 24),
+              _buildTextField('Nama Produk'),
+              const SizedBox(height: 16),
+              _buildTextField('Harga'),
+              const SizedBox(height: 16),
+              _buildTextField('Kondisi'),
+              const SizedBox(height: 16),
+              _buildTextField('Deskripsi Barang', maxLines: 4),
+              const SizedBox(height: 24),
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
                     ),
                   ),
-                ),
-                const SizedBox(height: 17.0),
-                
-                Container(
-                  height: 46,
-                  width: 172,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Add Image',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.blue),
-                      ),
-                    ),
+                  onPressed: () {
+                    _showUploadDialog(context);
+                  },
+                  child: const Text(
+                    'Simpan',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-                const SizedBox(height: 17.0),
-                Text(
-                  'General Information',
-                  style: GoogleFonts.inter(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 17.0),
-                Container(
-                  height: 46,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Product Name...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.blue),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 17.0),
-
-                
-                Container(
-                  height: 46,
-                  width: 172,
-                  child: DropdownButtonFormField<String>(
-                    value: selectedCategory,
-                    hint: const Text('Select Category'),
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                    items: categories.map((String category) {
-                      return DropdownMenuItem<String>(
-                        value: category,
-                        child: Text(category),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedCategory = newValue; 
-                      });
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.blue),
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 17.0),
-
-                Container(
-                  height: 46,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Price',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.blue),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 17.0),
-                TextField(
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                    labelText: 'Product Description',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: const BorderSide(color: Colors.black),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: const BorderSide(color: Colors.blue),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 17.0),
-
-                Container(
-                  height: 46,
-                  width: 172,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Price',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.blue),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 25.0),
-                
-                Center(
-                  child: Container(
-                    width: 172,
-                    height: 55,
-                    child: OutlinedButton(
-                      onPressed: () {
-                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const search(),
-                        ),
-                       );
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.black, width: 2.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
-                      ),
-                      child: Text(
-                        'Save Product',
-                        style: GoogleFonts.inter(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField(String label, {int maxLines = 1}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          maxLines: maxLines,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showUploadDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(''),
+          content: const Text('Produk Anda telah berhasil di-upload.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const Navbar()),
+                );
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

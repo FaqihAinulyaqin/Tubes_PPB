@@ -1,5 +1,36 @@
-
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors_in_immutables
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+
+import 'notification.dart';
+
+void main() async {
+  await AwesomeNotifications().initialize(null, [
+    NotificationChannel(
+        channelGroupKey: "basic_channel_group",
+        channelKey: "Basic_Channel",
+        channelName: "Basic Name",
+        channelDescription: "test")
+  ], channelGroups: [
+    NotificationChannelGroup(
+        channelGroupKey: "basic_channel_group", channelGroupName: "Basic Group")
+  ]);
+  bool isAllowedToSendNotification =
+      await AwesomeNotifications().isNotificationAllowed();
+  if (!isAllowedToSendNotification) {
+    AwesomeNotifications().requestPermissionToSendNotifications();
+  }
+  runApp(ChatApp());
+}
+
+class ChatApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: Chat2(),
+    );
+  }
+}
 
 class Chat2 extends StatefulWidget {
   const Chat2({super.key});
@@ -9,13 +40,26 @@ class Chat2 extends StatefulWidget {
 }
 
 class _Chat2State extends State<Chat2> {
-  final List<Map<String, dynamic>> profileseller= [
+  final List<Map<String, dynamic>> profileseller = [
     {
-      'image': 'Images/ProfilePicSeller.png', // Ensure the image exists in assets
+      'image': 'Images/ProfilePicSeller.png',
       'store': 'JisooNampyeon',
       'status': 'Online',
     }
   ];
+
+  @override
+  void initState() {
+    AwesomeNotifications().setListeners(
+        onActionReceivedMethod: NotificationController.onActionReceivedMethod,
+        onNotificationCreatedMethod:
+            NotificationController.onNotificationCreatedMethod,
+        onNotificationDisplayedMethod:
+            NotificationController.onNotificationDisplayedMethod,
+        onDismissActionReceivedMethod:
+            NotificationController.onDismissActionReceivedMethod);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +74,8 @@ class _Chat2State extends State<Chat2> {
         title: Row(
           children: [
             IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+              icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                  color: Colors.black),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -102,7 +147,7 @@ class ChatBubble extends StatelessWidget {
       children: [
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height* 0.07, 
+            maxHeight: MediaQuery.of(context).size.height * 0.07,
           ),
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -131,7 +176,6 @@ class ChatBubble extends StatelessWidget {
   }
 }
 
-
 class ChatInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -145,18 +189,25 @@ class ChatInputField extends StatelessWidget {
           Expanded(
             child: TextField(
               decoration: InputDecoration(
-                hintText: "Write Your Message Here...",
-                hintStyle: const TextStyle(color: Colors.black45),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30)
-                )
-              ),
+                  hintText: "Write Your Message Here...",
+                  hintStyle: const TextStyle(color: Colors.black45),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30))),
               style: const TextStyle(color: Colors.grey),
             ),
           ),
           IconButton(
             icon: const Icon(Icons.send_rounded, color: Colors.black),
-            onPressed: () {},
+            onPressed: () {
+              AwesomeNotifications().createNotification(
+                content: NotificationContent(
+                  id: 2,
+                  channelKey: "Basic_Channel",
+                  title: "JisooNampyeon",
+                  body: "Nilai A ya pak"
+                )
+              );
+            },
           ),
         ],
       ),

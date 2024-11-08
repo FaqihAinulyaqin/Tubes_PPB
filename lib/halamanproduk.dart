@@ -3,24 +3,20 @@
 import 'package:flutter/material.dart';
 import 'Navbar.dart';
 import 'chat.dart';
+import 'Ulasan.dart';
 
-class Halamanproduk extends StatefulWidget {
-  const Halamanproduk({super.key});
+class Halamanproduk extends StatelessWidget {
+  final Map<String, dynamic> product;
 
-  @override
-  _HalamanprodukState createState() => _HalamanprodukState();
-}
-
-class _HalamanprodukState extends State<Halamanproduk> {
-  bool isFavorited = false;
+  const Halamanproduk({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Column(
-          //Mirip Appbar
           children: [
+            // Mirip Appbar
             Container(
               margin: const EdgeInsets.only(top: 20),
               width: MediaQuery.of(context).size.width,
@@ -47,8 +43,10 @@ class _HalamanprodukState extends State<Halamanproduk> {
                             ),
                             onPressed: () {
                               Navigator.push(
-                                context, 
-                                MaterialPageRoute(builder: (context) => const Navbar()),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Navbar(),
+                                ),
                               );
                             },
                           ),
@@ -56,8 +54,8 @@ class _HalamanprodukState extends State<Halamanproduk> {
                       ),
                     ],
                   ),
-                  
-                  //Logo
+
+                  // Logo
                   Column(
                     children: [
                       Padding(
@@ -68,11 +66,11 @@ class _HalamanprodukState extends State<Halamanproduk> {
                           height: 43,
                           fit: BoxFit.contain,
                         ),
-                      )
+                      ),
                     ],
                   ),
 
-                  //Notif dan Pesan
+                  // Notif dan Pesan
                   Row(
                     children: [
                       Container(
@@ -81,60 +79,56 @@ class _HalamanprodukState extends State<Halamanproduk> {
                         child: Icon(Icons.notifications),
                         decoration: BoxDecoration(
                           color: Color(0xFFC2D2E5),
-                          borderRadius: BorderRadius.circular(180)
+                          borderRadius: BorderRadius.circular(180),
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(5),
-                        margin: EdgeInsets.only(right: 20, top: 12),
+                        padding: const EdgeInsets.all(5),
+                        margin: const EdgeInsets.only(right: 20, top: 12),
                         child: Icon(Icons.chat),
                         decoration: BoxDecoration(
                           color: Color(0xFFC2D2E5),
-                          borderRadius: BorderRadius.circular(180)
+                          borderRadius: BorderRadius.circular(180),
                         ),
-                      )
+                      ),
                     ],
                   )
                 ],
               ),
             ),
-            const Row(
-              children: [
-                SizedBox(height: 32,)
-              ],
-            ),
+            const SizedBox(height: 32),
 
-            //Nama Produk
-            const Row(
+            // Nama Produk
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'NIKON D7500',
-                  style: TextStyle(
+                  product["name"], // Menampilkan nama produk yang dipilih
+                  style: const TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                   ),
-                )
+                ),
               ],
             ),
 
             const SizedBox(height: 38),
 
-            //Foto Produk
+            // Foto Produk
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'Images/contohproduk.png',
+                  product["image"], // Menggunakan gambar produk yang dipilih
                   width: 282,
                   height: 272,
-                )
+                ),
               ],
             ),
 
             const SizedBox(height: 18),
 
-            //Product Description Text
+            // Product Description Text
             const Padding(
               padding: EdgeInsets.only(left: 20),
               child: Row(
@@ -152,21 +146,22 @@ class _HalamanprodukState extends State<Halamanproduk> {
 
             // Deskripsi Produk
             const Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
+              padding: EdgeInsets.only(left: 20),
               child: Row(
                 children: [
                   Text(
                     textAlign: TextAlign.justify,
-                    '20.9 Megapixels, DX-Format CMOS Sensor, EXPEED\n'
-                    '5 Image Processor, 3.2" Touchscreen LCD, 4K UHD\n'
-                    'Video at 30 fps, Multi-CAM 3500FX II 51-Point AF\n'
-                    'System, Bluetooth and Wi-Fi, Include AF-S DX\n'
-                    '18-140mm f/3.5-5.6G ED VR Lens',
+                    '20.9 Megapixels, DX-Format CMOS Sensor,\n'
+                    'EXPEED 5 Image Processor, 3.2" Touchscreen\n'
+                    'LCD, 4K UHD Video at 30 fps, Multi-CAM\n'
+                    '3500FX II 51-Point AF System, Bluetooth\n'
+                    'and Wi-Fi, Include AF-S DX 18-140mm\n'
+                    'f/3.5-5.6G ED VR Lens',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -174,15 +169,15 @@ class _HalamanprodukState extends State<Halamanproduk> {
             const SizedBox(height: 7),
 
             // Harga Produk
-            const Padding(
-              padding: EdgeInsets.only(left: 20),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
               child: Row(
                 children: [
                   Text(
-                    'Rp 13.000.000,00',
-                    style: TextStyle(
+                    product["price"], // Menggunakan harga produk yang dipilih
+                    style: const TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.w500
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -191,7 +186,7 @@ class _HalamanprodukState extends State<Halamanproduk> {
 
             const SizedBox(height: 8),
 
-            //Profile Pic Seller
+            // Profile Pic Seller
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -204,27 +199,33 @@ class _HalamanprodukState extends State<Halamanproduk> {
                     width: 55,
                   ),
                 ),
-            
+
                 // Nama Penjual
                 const Padding(
                   padding: EdgeInsets.only(right: 80),
                   child: Text(
                     'JisooNampyeon',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal
-                    ),
+                    style:
+                        TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                   ),
                 ),
-            
+
                 // Ulasan Penjual
                 Padding(
                   padding: const EdgeInsets.only(right: 20),
-                  child: Image.asset(
-                    'Images/Bintang.png',
-                    alignment: Alignment.centerRight,
-                    height: 20,
-                    width: 115 - 24,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Ulasan()),
+                      );
+                    },
+                    child: Image.asset(
+                      'Images/Bintang.png',
+                      alignment: Alignment.centerRight,
+                      height: 20,
+                      width: 115,
+                    ),
                   ),
                 )
               ],
@@ -232,24 +233,24 @@ class _HalamanprodukState extends State<Halamanproduk> {
 
             const SizedBox(height: 22),
 
-            //Button Chat penjual sekarang
+            // Button Chat penjual sekarang
             Row(
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 5),
                   child: TextButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.push(
-                        context, 
+                        context,
                         MaterialPageRoute(builder: (context) => const Chat()),
                       );
-                    } ,
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(35),
-                        color: Colors.black
+                        color: Colors.black,
                       ),
-                      width: 314 - 45,
+                      width: 314,
                       height: 56,
                       alignment: Alignment.center,
                       child: const Text(
@@ -257,35 +258,33 @@ class _HalamanprodukState extends State<Halamanproduk> {
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 15,
-                          fontWeight: FontWeight.bold
+                          fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
-                      )
+                      ),
                     ),
                   ),
                 ),
 
-                //Button masukan ke wishlist
+                // Button masukan ke wishlist
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: IconButton(
                     icon: Icon(
-                      isFavorited ? Icons.favorite : Icons.favorite_border,
+                      Icons.favorite, // Tombol untuk menambahkan ke wishlist
                       size: 36,
-                      color: isFavorited ? Colors.red : Colors.black,
+                      color: Colors.black,
                     ),
                     onPressed: () {
-                      setState(() {
-                        isFavorited = !isFavorited;
-                      });
+                      // Logika untuk menambahkan ke wishlist (jika ada)
                     },
                   ),
                 )
               ],
             )
           ],
-        )
-      )
+        ),
+      ),
     );
   }
 }
