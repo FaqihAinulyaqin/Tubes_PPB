@@ -11,6 +11,36 @@ class HalamanUtama extends StatefulWidget {
 }
 
 class _HalamanUtamaState extends State<HalamanUtama> {
+  final List<Map<String, dynamic>> products = [
+    {
+      'image': 'Images/camera.png',
+      'name': 'Nikon D7500',
+      'category': 'DSLR-Camera',
+      'price': 'Rp. 13.000.000,00',
+      'bundle': 'Non-Bundle',
+    },
+    {
+      'image': 'Images/gitar.png',
+      'name': 'Gitar Yamaha LL16D ARE',
+      'category': 'Guitar',
+      'price': 'Rp. 14.500.000,00',
+      'bundle': 'Bundle + Capo',
+    },
+    {
+      'image': 'Images/light stick.png',
+      'name': 'Lightstick Le Sserafim',
+      'category': 'Lightstick',
+      'price': 'Rp. 814.000,00',
+      'bundle': 'K-Pop',
+    },
+    {
+      'image': 'Images/boots.png',
+      'name': 'black boots',
+      'category': 'footwear',
+      'price': 'Rp. 529.000,00',
+      'bundle': 'Non-Bundle',
+    },
+  ];
   String? selectedCategory;
   final List<String> categories = ['Category', 'Category', 'Category', 'Category'];
 
@@ -201,7 +231,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                       onPressed: (){
                                         Navigator.push(
                                           context, 
-                                          MaterialPageRoute(builder: (context) => Halamanproduk())
+                                          MaterialPageRoute(builder: (context) => Halamanproduk(product: products[0],))
                                         );
                                       }, 
                                       child: Text('Buy Now', style: TextStyle(color: Colors.black))
