@@ -1,6 +1,8 @@
+import 'dart:convert'; 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'Navbar.dart';
+import 'package:http/http.dart' as http;
+import 'Navbar.dart'; 
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -14,6 +16,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  // Menampilkan dialog untuk error
   void _showDialog(String message) {
     showDialog(
       context: context,
@@ -34,6 +37,7 @@ class _LoginState extends State<Login> {
     );
   }
 
+  // Menampilkan SnackBar jika berhasil
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -41,6 +45,47 @@ class _LoginState extends State<Login> {
         duration: const Duration(seconds: 2),
       ),
     );
+  }
+
+  // Fungsi login untuk mengakses API Node.js
+  Future<void> _login() async {
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+
+    // Validasi jika username atau password kosong
+    if (username.isEmpty || password.isEmpty) {
+      _showDialog('Username and Password cannot be empty');
+      return;
+    }
+
+    final url = Uri.parse('http://192.168.100.86:3000/api/users/login');
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'username': username,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // Menampilkan pesan sukses dan navigasi ke halaman selanjutnya
+        _showSnackBar('Login successful! Welcome');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Navbar()),
+        );
+      } else {
+        final data = jsonDecode(response.body);
+        // Menampilkan pesan error jika login gagal
+        _showDialog(data['message'] ?? 'Invalid username or password');
+      }
+    } catch (e) {
+      // Menampilkan pesan error jika ada masalah koneksi
+      _showDialog('An error occurred: $e');
+    }
   }
 
   @override
@@ -70,7 +115,6 @@ class _LoginState extends State<Login> {
                 ),
               ),
               const SizedBox(height: 20),
-
               Container(
                 width: 300,
                 height: MediaQuery.of(context).size.height / 3,
@@ -83,14 +127,13 @@ class _LoginState extends State<Login> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Username SSO',
+                      'Username',
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 5),
-
                     TextField(
                       controller: _usernameController,
                       decoration: InputDecoration(
@@ -111,16 +154,14 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     const SizedBox(height: 7),
-
                     Text(
-                      'Password SSO',
+                      'Password',
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 5),
-
                     TextField(
                       controller: _passwordController,
                       obscureText: _obscureText,
@@ -154,23 +195,9 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    
                     Center(
                       child: ElevatedButton(
-                        onPressed: () {
-                          if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
-                            _showDialog('Username and Password cannot be empty');
-                          } else {
-                            _showSnackBar('Login successful!');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const Navbar(),
-                              ),
-                            );
-                            print('Login button pressed');
-                          }
-                        },
+                        onPressed: _login, // Menjalankan fungsi login
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(200, 50),
                           shape: RoundedRectangleBorder(
