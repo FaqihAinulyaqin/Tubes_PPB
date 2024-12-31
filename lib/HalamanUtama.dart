@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:ureveryday_ppb/search.dart';
 import 'chat.dart';
@@ -34,13 +34,13 @@ class _HalamanUtamaState extends State<HalamanUtama> {
         setState(() {
           loading = false;
         });
-        print('Failed to fetch products. Status Code: ${respon.statusCode}');
+        log('Failed to fetch products. Status Code: ${respon.statusCode}');
       }
     } catch (e) {
       setState(() {
         loading = false;
       });
-      print('Error: $e');
+      log('Error: $e');
     }
   }
 
@@ -52,7 +52,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
         final data = jsonDecode(respon.body);
         // Menyaring hanya data kategori
         setState(() {
-          categories = List<String>.from(data['data'].map((item) => item['kategori']));;
+          categories = List<String>.from(data['data'].map((item) => item['kategori']));
           loading = false;
         });
       } else {
@@ -60,13 +60,13 @@ class _HalamanUtamaState extends State<HalamanUtama> {
         setState(() {
           loading = false;
         });
-        print('Failed to fetch products. Status Code: ${respon.statusCode}');
+        log('Failed to fetch products. Status Code: ${respon.statusCode}');
       }
     } catch (e) {
       setState(() {
         loading = false;
       });
-      print('Error: $e');
+      log('Error: $e');
     }
   }
 
@@ -84,7 +84,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
         });
       }
     } catch (e) {
-      print('Error fetching products by category: $e');
+      log('Error fetching products by category: $e');
     } finally {
       setState(() {
         loading = false;
