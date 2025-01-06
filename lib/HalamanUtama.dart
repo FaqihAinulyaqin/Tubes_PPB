@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:ureveryday_ppb/search.dart';
 import 'chat.dart';
@@ -21,52 +20,48 @@ class _HalamanUtamaState extends State<HalamanUtama> {
   // Mengambil produk dari API
   Future<void> _getProduk() async {
     try {
-      final respon = await http.get(Uri.parse('http://192.168.87.24:3000/api/produk/getProduk'));
+      final respon = await http.get(Uri.parse('http://localhost:3000/api/produk/getProduk'));
       if (respon.statusCode == 200) {
         final data = jsonDecode(respon.body);
-        // Menyaring hanya data produk
         setState(() {
           products = List<Map<String, dynamic>>.from(data['data']);
           loading = false;
         });
       } else {
-        // Menangani kesalahan jika status code tidak 200
         setState(() {
           loading = false;
         });
-        log('Failed to fetch products. Status Code: ${respon.statusCode}');
+        _showSnackBar('Failed to fetch products. Status Code: ${respon.statusCode}');
       }
     } catch (e) {
       setState(() {
         loading = false;
       });
-      log('Error: $e');
+      _showSnackBar('Error fetching products: $e');
     }
   }
 
   // Mengambil kategori dari API
   Future<void> _getCategory() async {
     try {
-      final respon = await http.get(Uri.parse('http://192.168.87.24:3000/api/produk/getCategory'));
+      final respon = await http.get(Uri.parse('http://localhost:3000/api/produk/getCategory'));
       if (respon.statusCode == 200) {
         final data = jsonDecode(respon.body);
-        // Menyaring hanya data kategori
         setState(() {
           categories = List<String>.from(data['data'].map((item) => item['kategori']));
           loading = false;
         });
       } else {
-        // Menangani kesalahan jika status code tidak 200
         setState(() {
           loading = false;
         });
-        log('Failed to fetch products. Status Code: ${respon.statusCode}');
+        _showSnackBar('Failed to fetch category. Status Code: ${respon.statusCode}');
       }
     } catch (e) {
       setState(() {
         loading = false;
       });
-      log('Error: $e');
+      _showSnackBar('Error fetching categories: $e');
     }
   }
 
@@ -76,28 +71,45 @@ class _HalamanUtamaState extends State<HalamanUtama> {
       loading = true;
     });
     try {
-      final response = await http.get(Uri.parse('http://192.168.87.24:3000/api/produk/getProduk/$category'));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+      final respon = await http.get(Uri.parse('http://localhost:3000/api/produk/getProduk/$category'));
+      if (respon.statusCode == 200) {
+        final data = jsonDecode(respon.body);
         setState(() {
           products = List<Map<String, dynamic>>.from(data['data']);
+          loading = false;
         });
+      } else {
+        setState(() {
+          loading = false;
+        });
+        _showSnackBar('Failed to fetch products. Status Code: ${respon.statusCode}');
       }
     } catch (e) {
-      log('Error fetching products by category: $e');
-    } finally {
       setState(() {
         loading = false;
       });
+      _showSnackBar('Error fetching products by category: $e');
     }
   }
 
   // Fungsi untuk refresh data produk
   Future<void> _onRefresh() async {
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
-      loading = true;  // Menampilkan indikator loading saat refresh
+      loading = true;
     });
+    _showSnackBar('Refreshed');
     await _getProduk();
+  }
+
+  // Snackbar
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -112,11 +124,10 @@ class _HalamanUtamaState extends State<HalamanUtama> {
     return Scaffold(
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: _onRefresh,  // Menambahkan fungsi refresh saat pull-to-refresh
+          onRefresh: _onRefresh,
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Header bagian atas
                 Container(
                   margin: const EdgeInsets.only(top: 20),
                   width: MediaQuery.of(context).size.width,
@@ -159,11 +170,14 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset(
+                          TextButton(
+                            onPressed: _onRefresh, 
+                            child: Image.asset(
                             'Images/Logo.png',
                             width: 73,
                             height: 43,
-                          )
+                          ))
+                          
                         ],
                       ),
                       Row(
@@ -294,7 +308,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                             )
                           : GridView.builder(
                               shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
+                              physics: const AlwaysScrollableScrollPhysics(),
                               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 10,
