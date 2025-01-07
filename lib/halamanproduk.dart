@@ -1,287 +1,264 @@
-// ignore_for_file: library_private_types_in_public_api
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+
 import 'Navbar.dart';
-import 'chat.dart';
-import 'Ulasan.dart';
 
-class Halamanproduk extends StatelessWidget {
-  final Map<String, dynamic> product;
+class Halamanproduk extends StatefulWidget {
+  final int productId;
 
-  const Halamanproduk({super.key, required this.product});
+  const Halamanproduk({super.key, required this.productId});
+
+  @override
+  _HalamanprodukState createState() => _HalamanprodukState();
+}
+
+class _HalamanprodukState extends State<Halamanproduk> {
+  Map<String, dynamic>? product;
+  bool isLoading = true;
+  String? errorMessage;
+  bool isWishlisted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProductDetails(widget.productId);
+  }
+
+  Future<void> fetchProductDetails(int productId) async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'http://192.168.100.47:3000/api/produk/getProdukById/$productId'),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print("Response body: ${response.body}");
+
+        setState(() {
+          if (data != null &&
+              data is Map<String, dynamic> &&
+              data["data"] != null) {
+            if (data["data"] is List && (data["data"] as List).isNotEmpty) {
+              product = data["data"][0];
+            } else if (data["data"] is Map<String, dynamic>) {
+              product = data["data"];
+            } else {
+              errorMessage = "Data produk tidak ditemukan.";
+            }
+          } else {
+            errorMessage = "Data produk tidak ditemukan.";
+          }
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          errorMessage = "Gagal memuat produk (Error ${response.statusCode})";
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = "Terjadi kesalahan: $e";
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final Uri WhatsAppNumber =
+        Uri.parse('https://wa.me/${product?["penjual_nomorWA"]}');
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            // Mirip Appbar
-            Container(
-              margin: const EdgeInsets.only(top: 20),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        height: 36,
-                        width: 36,
-                        margin: EdgeInsets.only(left: 20, top: 12),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFC2D2E5),
-                          shape: BoxShape.circle,
-                        ),
-                        alignment: Alignment.center,
-                        child: Center(
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_ios_new_rounded,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Navbar(),
-                                ),
-                              );
-                            },
+            isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : errorMessage != null
+                    ? Center(child: Text(errorMessage!))
+                    : product == null
+                        ? const Center(child: Text("Produk tidak ditemukan."))
+                        : SingleChildScrollView(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 20),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(
+                                              Icons.arrow_back_ios_new_rounded),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const Navbar()),
+                                            );
+                                          },
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 50),
+                                          child: Image.asset(
+                                            'Images/Logo.png',
+                                            width: 73,
+                                            height: 43,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 20),
+
+                                  // Nama Produk
+                                  Center(
+                                    child: Text(
+                                      product?["nama_produk"] ??
+                                          "Nama Produk Tidak Tersedia",
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 20),
+
+                                  // Gambar Produk
+                                  Center(
+                                    child: product?["img_path"] != null
+                                        ? Image.asset(
+                                            product!["img_path"],
+                                            width: 282,
+                                            height: 272,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : const Placeholder(
+                                            fallbackWidth: 282,
+                                            fallbackHeight: 272,
+                                          ),
+                                  ),
+                                  const SizedBox(height: 20),
+
+                                  // Deskripsi Produk
+                                  const Text(
+                                    'Deskripsi Produk:',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    product?["deskripsi"] ??
+                                        "Deskripsi tidak tersedia",
+                                    textAlign: TextAlign.justify,
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+
+                                  const SizedBox(height: 20),
+
+                                  // Harga Produk
+                                  Text(
+                                    product?["harga_produk"] != null
+                                        ? 'Rp ${product?["harga_produk"]}'
+                                        : "Harga tidak tersedia",
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 1),
+                                        child: product?["penjual_profilePic"] !=
+                                                null
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: Image.asset(
+                                                  product![
+                                                      "penjual_profilePic"],
+                                                  width: 40,
+                                                  height: 40,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              )
+                                            : const Placeholder(
+                                                fallbackWidth: 40,
+                                                fallbackHeight: 40,
+                                              ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {},
+                                        child: Text(
+                                          product?["penjual_username"] != null
+                                              ? product!["penjual_username"]
+                                              : "Nama User Tidak",
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  const SizedBox(height: 20),
+                                ]),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
 
-                  // Logo
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 30),
-                        child: Image.asset(
-                          'Images/Logo.png',
-                          width: 73,
-                          height: 43,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // Notif dan Pesan
-                  Row(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(right: 12, top: 12),
-                        padding: const EdgeInsets.all(5),
-                        child: Icon(Icons.notifications),
-                        decoration: BoxDecoration(
-                          color: Color(0xFFC2D2E5),
-                          borderRadius: BorderRadius.circular(180),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        margin: const EdgeInsets.only(right: 20, top: 12),
-                        child: Icon(Icons.chat),
-                        decoration: BoxDecoration(
-                          color: Color(0xFFC2D2E5),
-                          borderRadius: BorderRadius.circular(180),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(height: 32),
-
-            // Nama Produk
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  product["name"], // Menampilkan nama produk yang dipilih
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 38),
-
-            // Foto Produk
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  product["image"], // Menggunakan gambar produk yang dipilih
-                  width: 282,
-                  height: 272,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 18),
-
-            // Product Description Text
-            const Padding(
-              padding: EdgeInsets.only(left: 20),
+                          SizedBox(height: 100),
+            Center(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
-                    'Product Description: ',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Deskripsi Produk
-            const Padding(
-              padding: EdgeInsets.only(left: 20),
-              child: Row(
-                children: [
-                  Text(
-                    textAlign: TextAlign.justify,
-                    '20.9 Megapixels, DX-Format CMOS Sensor,\n'
-                    'EXPEED 5 Image Processor, 3.2" Touchscreen\n'
-                    'LCD, 4K UHD Video at 30 fps, Multi-CAM\n'
-                    '3500FX II 51-Point AF System, Bluetooth\n'
-                    'and Wi-Fi, Include AF-S DX 18-140mm\n'
-                    'f/3.5-5.6G ED VR Lens',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 7),
-
-            // Harga Produk
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Row(
-                children: [
-                  Text(
-                    product["price"], // Menggunakan harga produk yang dipilih
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            // Profile Pic Seller
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Image.asset(
-                    'Images/ProfilePicSeller.png',
-                    alignment: Alignment.centerLeft,
-                    height: 55,
-                    width: 55,
-                  ),
-                ),
-
-                // Nama Penjual
-                const Padding(
-                  padding: EdgeInsets.only(right: 80),
-                  child: Text(
-                    'JisooNampyeon',
-                    style:
-                        TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
-                  ),
-                ),
-
-                // Ulasan Penjual
-                Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Ulasan()),
-                      );
-                    },
-                    child: Image.asset(
-                      'Images/Bintang.png',
-                      alignment: Alignment.centerRight,
-                      height: 20,
-                      width: 115,
-                    ),
-                  ),
-                )
-              ],
-            ),
-
-            const SizedBox(height: 22),
-
-            // Button Chat penjual sekarang
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Chat()),
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(35),
-                        color: Colors.black,
                       ),
-                      width: 314,
-                      height: 56,
-                      alignment: Alignment.center,
-                      child: const Text(
-                        'Chat Penjual Sekarang',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Button masukan ke wishlist
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.favorite, // Tombol untuk menambahkan ke wishlist
-                      size: 36,
-                      color: Colors.black,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 60),
                     ),
                     onPressed: () {
-                      // Logika untuk menambahkan ke wishlist (jika ada)
+                      launchUrl(WhatsAppNumber);
+                    },
+                    child: const Text(
+                      'Chat Penjual Sekarang',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  IconButton(
+                    icon: Icon(
+                      isWishlisted ? Icons.favorite : Icons.favorite_border,
+                      color: isWishlisted ? Colors.red : Colors.grey,
+                      size: 30,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isWishlisted = !isWishlisted;
+                      });
                     },
                   ),
-                )
-              ],
-            )
+                ],
+              ),
+            ),
           ],
         ),
       ),
