@@ -1,8 +1,12 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 
 import 'HalamanUtama.dart';
+=======
+import 'package:ureveryday_ppb/Navbar.dart';
+>>>>>>> origin/Faqih-1302220086
 import 'chat2.dart';
 
 class Chat extends StatefulWidget {
@@ -54,7 +58,11 @@ class _ChatState extends State<Chat>{
                       onPressed: () {
                         Navigator.push(
                           context,
+<<<<<<< HEAD
                           MaterialPageRoute(builder: (context) => const HalamanUtama()),
+=======
+                          MaterialPageRoute(builder: (context) => const Navbar()),
+>>>>>>> origin/Faqih-1302220086
                         );
                       },
                     ),

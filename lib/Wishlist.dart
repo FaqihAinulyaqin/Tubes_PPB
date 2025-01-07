@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'halamanproduk.dart';
+<<<<<<< HEAD
 import 'package:ureveryday_ppb/HalamanUtama.dart';
+=======
+>>>>>>> origin/Faqih-1302220086
 
 class Wishlist extends StatefulWidget {
   const Wishlist({super.key});
@@ -121,10 +124,13 @@ class _WishlistState extends State<Wishlist> {
                       ),
                     ],
                   ),
+<<<<<<< HEAD
                   IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {},
                   ),
+=======
+>>>>>>> origin/Faqih-1302220086
                 ],
               ),
             ),

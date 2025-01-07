@@ -1,17 +1,38 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:ureveryday_ppb/Ulasan.dart';
 
 import 'HalamanUtama.dart';
 import 'Profile.dart';
 import 'Sell.dart';
 import 'Wishlist.dart';
+=======
+import 'package:google_fonts/google_fonts.dart';
+import 'pemanis.dart';
+>>>>>>> origin/Faqih-1302220086
 
-void main() {
+void main() async {
+  await AwesomeNotifications().initialize(null, [
+    NotificationChannel(
+        channelGroupKey: "basic_channel_group",
+        channelKey: "Basic_Channel",
+        channelName: "Basic Name",
+        channelDescription: "test")
+  ], channelGroups: [
+    NotificationChannelGroup(
+        channelGroupKey: "basic_channel_group", channelGroupName: "Basic Group")
+  ]);
+  bool isAllowedToSendNotification =
+      await AwesomeNotifications().isNotificationAllowed();
+  if (!isAllowedToSendNotification) {
+    AwesomeNotifications().requestPermissionToSendNotifications();
+  }
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  class MyApp extends StatelessWidget {
+    const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +40,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'UREveryday',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        primarySwatch: Colors.blue,
+        textTheme: GoogleFonts.interTextTheme(),
         useMaterial3: true,
       ),
+<<<<<<< HEAD
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -109,6 +132,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
+=======
+      home: const Pemanis(),
+>>>>>>> origin/Faqih-1302220086
     );
   }
 }

@@ -1,7 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'HalamanUtama.dart';
+=======
+import 'Navbar.dart';
+>>>>>>> origin/Faqih-1302220086
 import 'chat.dart';
 import 'Ulasan.dart';
 
@@ -45,7 +49,11 @@ class Halamanproduk extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
+<<<<<<< HEAD
                                   builder: (context) => const HalamanUtama(),
+=======
+                                  builder: (context) => const Navbar(),
+>>>>>>> origin/Faqih-1302220086
                                 ),
                               );
                             },
@@ -146,16 +154,29 @@ class Halamanproduk extends StatelessWidget {
 
             // Deskripsi Produk
             const Padding(
+<<<<<<< HEAD
               padding: EdgeInsets.only(left: 20, right: 20),
+=======
+              padding: EdgeInsets.only(left: 20),
+>>>>>>> origin/Faqih-1302220086
               child: Row(
                 children: [
                   Text(
                     textAlign: TextAlign.justify,
+<<<<<<< HEAD
                     '20.9 Megapixels, DX-Format CMOS Sensor, EXPEED\n'
                     '5 Image Processor, 3.2" Touchscreen LCD, 4K UHD\n'
                     'Video at 30 fps, Multi-CAM 3500FX II 51-Point AF\n'
                     'System, Bluetooth and Wi-Fi, Include AF-S DX\n'
                     '18-140mm f/3.5-5.6G ED VR Lens',
+=======
+                    '20.9 Megapixels, DX-Format CMOS Sensor,\n'
+                    'EXPEED 5 Image Processor, 3.2" Touchscreen\n'
+                    'LCD, 4K UHD Video at 30 fps, Multi-CAM\n'
+                    '3500FX II 51-Point AF System, Bluetooth\n'
+                    'and Wi-Fi, Include AF-S DX 18-140mm\n'
+                    'f/3.5-5.6G ED VR Lens',
+>>>>>>> origin/Faqih-1302220086
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
