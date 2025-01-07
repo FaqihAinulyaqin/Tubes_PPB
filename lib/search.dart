@@ -13,6 +13,7 @@ class _SearchPageState extends State<SearchPage> {
   bool _isLoading = false;
 
   // Fungsi untuk memanggil API pencarian produk
+  // Fungsi untuk memanggil API pencarian produk
   Future<void> _searchProduk(String searchTerm) async {
     final url = Uri.parse('http://192.168.100.89:3000/api/search/searchProduk?searchTerm=$searchTerm');
     
