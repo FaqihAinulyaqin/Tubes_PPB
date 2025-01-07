@@ -13,8 +13,7 @@ class _PemanisState extends State<Pemanis> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.only(left: 30, right: 30),
         child: Column(
@@ -61,7 +60,6 @@ class _PemanisState extends State<Pemanis> {
               ),
             ),
             const SizedBox(height: 50),
-
             Center(
               child: OutlinedButton(
                 onPressed: () {
@@ -77,7 +75,8 @@ class _PemanisState extends State<Pemanis> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 30.0, vertical: 15.0),
                 ),
                 child: Text(
                   'Shop Now',

@@ -59,7 +59,8 @@ class _NavbarState extends State<Navbar> {
                     label: 'Home',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.add_circle_outline_sharp, color: Colors.white),
+                    icon: Icon(Icons.add_circle_outline_sharp,
+                        color: Colors.white),
                     label: 'Sell',
                   ),
                   BottomNavigationBarItem(

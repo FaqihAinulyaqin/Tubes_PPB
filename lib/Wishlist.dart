@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'dart:convert'; // For decoding JSON
+import 'package:http/http.dart' as http; // For making API calls
 import 'halamanproduk.dart';
-<<<<<<< HEAD
-import 'package:ureveryday_ppb/HalamanUtama.dart';
-=======
->>>>>>> origin/Faqih-1302220086
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+final storage = FlutterSecureStorage();
 
 class Wishlist extends StatefulWidget {
   const Wishlist({super.key});
@@ -13,36 +14,79 @@ class Wishlist extends StatefulWidget {
 }
 
 class _WishlistState extends State<Wishlist> {
-  final List<Map<String, dynamic>> products = [
-    {
-      'image': 'Images/camera.png',
-      'name': 'Nikon D7500',
-      'category': 'DSLR-Camera',
-      'price': 'Rp. 13.000.000,00',
-      'bundle': 'Non-Bundle',
-    },
-    {
-      'image': 'Images/gitar.png',
-      'name': 'Gitar Yamaha LL16D ARE',
-      'category': 'Guitar',
-      'price': 'Rp. 14.500.000,00',
-      'bundle': 'Bundle + Capo',
-    },
-    {
-      'image': 'Images/light stick.png',
-      'name': 'Lightstick Le Sserafim',
-      'category': 'Lightstick',
-      'price': 'Rp. 814.000,00',
-      'bundle': 'K-Pop',
-    },
-    {
-      'image': 'Images/boots.png',
-      'name': 'black boots',
-      'category': 'footwear',
-      'price': 'Rp. 529.000,00',
-      'bundle': 'Non-Bundle',
-    },
-  ];
+  bool isLoading = true; // Indicates if data is loading
+  List<dynamic> products = []; // Store product data
+
+  @override
+  void initState() {
+    super.initState();
+    fetchWishlist(); // Fetch wishlist items on initialization
+  }
+
+  Future<void> fetchWishlist() async {
+    final String url =
+        'http://192.168.0.106:3000/api/wishlist/getWishlist'; // Replace with your local IP
+    final String? token = await storage.read(
+        key: 'jwt_token'); // Get the token from secure storage
+
+    print('Fetching wishlist with token: $token'); // Debugging log
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      print('Response status: ${response.statusCode}'); // Log status
+      print('Response body: ${response.body}'); // Log body
+
+      if (response.statusCode == 200) {
+        setState(() {
+          products =
+              json.decode(response.body)['data']; // Get data from response
+          isLoading = false; // Data has been loaded
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        print('Failed to load wishlist: ${response.statusCode}');
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print('Error fetching wishlist: $e');
+    }
+  }
+
+  Future<void> removeFromWishlist(String id) async {
+    final String url =
+        'http://192.168.0.106:3000/api/wishlist/removeWishlist/$id'; // Replace with your local IP
+    final String? token = await storage.read(
+        key: 'jwt_token'); // Get the token from secure storage
+
+    try {
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Item successfully removed from wishlist');
+      } else {
+        print('Failed to remove item: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error removing item: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +94,7 @@ class _WishlistState extends State<Wishlist> {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Header
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -58,39 +102,41 @@ class _WishlistState extends State<Wishlist> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(194, 210, 229, 100),
+                    decoration: const BoxDecoration(
+                      color: Color.fromRGBO(194, 210, 229, 100),
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
-                      icon: Padding(
+                      icon: const Padding(
                         padding: EdgeInsets.only(left: 10),
                         child: Icon(Icons.arrow_back_ios),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context); // Go back to the previous page
+                      },
                     ),
                   ),
                   Image.asset("Images/cat.png"),
                   Row(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(right: 8),
-                        decoration: BoxDecoration(
-                          color: const Color.fromRGBO(194, 210, 229, 100),
+                        margin: const EdgeInsets.only(right: 8),
+                        decoration: const BoxDecoration(
+                          color: Color.fromRGBO(194, 210, 229, 100),
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.notifications_active),
+                          icon: const Icon(Icons.notifications_active),
                           onPressed: () {},
                         ),
                       ),
                       Container(
-                        decoration: BoxDecoration(
-                          color: const Color.fromRGBO(194, 210, 229, 100),
+                        decoration: const BoxDecoration(
+                          color: Color.fromRGBO(194, 210, 229, 100),
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.chat),
+                          icon: const Icon(Icons.chat),
                           onPressed: () {},
                         ),
                       ),
@@ -99,8 +145,8 @@ class _WishlistState extends State<Wishlist> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
-            //konten
+            const SizedBox(height: 20),
+            // Content
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -109,7 +155,7 @@ class _WishlistState extends State<Wishlist> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'WishList',
                         style: TextStyle(
                           fontSize: 24,
@@ -118,105 +164,114 @@ class _WishlistState extends State<Wishlist> {
                       ),
                       Text(
                         '${products.length} items',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.grey,
                         ),
                       ),
                     ],
                   ),
-<<<<<<< HEAD
-                  IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {},
-                  ),
-=======
->>>>>>> origin/Faqih-1302220086
                 ],
               ),
             ),
-            SizedBox(height: 10),
-            Divider(
+            const SizedBox(height: 10),
+            const Divider(
               thickness: 1.5,
-              color: const Color.fromARGB(255, 73, 71, 71),
+              color: Color.fromARGB(255, 73, 71, 71),
               indent: 16,
               endIndent: 16,
             ),
-            SizedBox(height: 10),
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                itemCount: products.length,
-                itemBuilder: (context, i) {
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                Halamanproduk(product: products[i]),
-                          ),
-                        );
-                      },
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.asset(
-                            products[i]["image"],
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.cover,
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: Column(
+            const SizedBox(height: 10),
+            isLoading
+                ? const Center(child: CircularProgressIndicator()) // Loader
+                : Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: products.length,
+                      itemBuilder: (context, i) {
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      Halamanproduk(product: products[i]),
+                                ),
+                              );
+                            },
+                            child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  products[i]["name"],
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                                Image.network(
+                                  products[i][
+                                      "product_imgPath"], // Ensure this key matches your API response
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                ),
+                                const SizedBox(width: 20),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        products[i][
+                                            "product_namaProduk"], // Ensure this key matches your API response
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        products[i][
+                                            "product_kategori"], // Ensure this key matches your API response
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text(
+                                        products[i][
+                                            "product_hargaProduk"], // Ensure this key matches your API response
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        products[i][
+                                            "product_subKategori"], // Ensure this key matches your API response
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  products[i]["category"],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Text(
-                                  products[i]["price"],
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  products[i]["bundle"],
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
+                                IconButton(
+                                  icon: const Icon(Icons.favorite),
+                                  onPressed: () async {
+                                    await removeFromWishlist(products[i][
+                                        "id"]); // Ensure this key matches your API response
+                                    setState(() {
+                                      products.removeAt(i);
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content:
+                                            Text('Item removed from wishlist'),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.favorite),
-                            onPressed: () {
-                              setState(() {
-                                products.removeAt(i);
-                              });
-                            },
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
           ],
         ),
       ),

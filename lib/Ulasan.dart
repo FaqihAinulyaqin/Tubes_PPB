@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'HalamanUtama.dart';
-<<<<<<< HEAD
-import 'halamanproduk.dart';
-=======
->>>>>>> origin/Faqih-1302220086
 
 class Ulasan extends StatefulWidget {
   const Ulasan({super.key});
@@ -125,11 +121,7 @@ class _UlasanState extends State<Ulasan> {
 
               RatingBar(
                 minRating: 1,
-<<<<<<< HEAD
-                maxRating: 5,
-=======
                 maxRating: 4,
->>>>>>> origin/Faqih-1302220086
                 initialRating: _currentRating,
                 allowHalfRating: true,
                 onRatingUpdate: (rating) {

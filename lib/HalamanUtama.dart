@@ -1,17 +1,8 @@
-<<<<<<< HEAD
-// ignore_for_file: sort_child_properties_last
-
-import 'package:flutter/material.dart';
-import 'package:ureveryday_ppb/Profile.dart';
-
-import 'halamanproduk.dart';
-=======
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ureveryday_ppb/search.dart';
 import 'chat.dart';
 import 'package:http/http.dart' as http;
->>>>>>> origin/Faqih-1302220086
 
 class HalamanUtama extends StatefulWidget {
   const HalamanUtama({super.key});
@@ -24,21 +15,13 @@ class _HalamanUtamaState extends State<HalamanUtama> {
   bool loading = true;
   List<Map<String, dynamic>> products = [];
   String? selectedCategory;
-<<<<<<< HEAD
-  final List<String> categories = [
-    'Category',
-    'Category',
-    'Category',
-    'Category'
-  ];
-  TextEditingController searchController = TextEditingController();
-=======
   List<String> categories = [];
 
   // Mengambil produk dari API
   Future<void> _getProduk() async {
     try {
-      final respon = await http.get(Uri.parse('http://localhost:3000/api/produk/getProduk'));
+      final respon = await http
+          .get(Uri.parse('http://localhost:3000/api/produk/getProduk'));
       if (respon.statusCode == 200) {
         final data = jsonDecode(respon.body);
         setState(() {
@@ -49,7 +32,8 @@ class _HalamanUtamaState extends State<HalamanUtama> {
         setState(() {
           loading = false;
         });
-        _showSnackBar('Failed to fetch products. Status Code: ${respon.statusCode}');
+        _showSnackBar(
+            'Failed to fetch products. Status Code: ${respon.statusCode}');
       }
     } catch (e) {
       setState(() {
@@ -62,18 +46,21 @@ class _HalamanUtamaState extends State<HalamanUtama> {
   // Mengambil kategori dari API
   Future<void> _getCategory() async {
     try {
-      final respon = await http.get(Uri.parse('http://localhost:3000/api/produk/getCategory'));
+      final respon = await http
+          .get(Uri.parse('http://localhost:3000/api/produk/getCategory'));
       if (respon.statusCode == 200) {
         final data = jsonDecode(respon.body);
         setState(() {
-          categories = List<String>.from(data['data'].map((item) => item['kategori']));
+          categories =
+              List<String>.from(data['data'].map((item) => item['kategori']));
           loading = false;
         });
       } else {
         setState(() {
           loading = false;
         });
-        _showSnackBar('Failed to fetch category. Status Code: ${respon.statusCode}');
+        _showSnackBar(
+            'Failed to fetch category. Status Code: ${respon.statusCode}');
       }
     } catch (e) {
       setState(() {
@@ -89,7 +76,8 @@ class _HalamanUtamaState extends State<HalamanUtama> {
       loading = true;
     });
     try {
-      final respon = await http.get(Uri.parse('http://localhost:3000/api/produk/getProduk/$category'));
+      final respon = await http.get(
+          Uri.parse('http://localhost:3000/api/produk/getProduk/$category'));
       if (respon.statusCode == 200) {
         final data = jsonDecode(respon.body);
         setState(() {
@@ -100,7 +88,8 @@ class _HalamanUtamaState extends State<HalamanUtama> {
         setState(() {
           loading = false;
         });
-        _showSnackBar('Failed to fetch products. Status Code: ${respon.statusCode}');
+        _showSnackBar(
+            'Failed to fetch products. Status Code: ${respon.statusCode}');
       }
     } catch (e) {
       setState(() {
@@ -136,176 +125,11 @@ class _HalamanUtamaState extends State<HalamanUtama> {
     _getProduk();
     _getCategory();
   }
->>>>>>> origin/Faqih-1302220086
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-<<<<<<< HEAD
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: 20),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 20, top: 12),
-                        child: IconButton(
-                          icon: Icon(Icons.menu),
-                          onPressed: () {
-                            showMenu(
-                              context: context,
-                              position: RelativeRect.fromLTRB(20, 50, 100, 0),
-                              items: categories.map((String category) {
-                                return PopupMenuItem<String>(
-                                  value: category,
-                                  child: Text(category),
-                                );
-                              }).toList(),
-                            ).then((String? newValue) {
-                              if (newValue != null) {
-                                setState(() {
-                                  selectedCategory = newValue;
-                                });
-                              }
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'Images/Logo.png',
-                        width: 73,
-                        height: 43,
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(right: 12, top: 12),
-                        padding: EdgeInsets.all(5),
-                        child: Icon(Icons.notifications),
-                        decoration: BoxDecoration(
-                            color: Color(0xFFC2D2E5),
-                            borderRadius: BorderRadius.circular(180)),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        margin: EdgeInsets.only(right: 20, top: 12),
-                        child: Icon(Icons.chat),
-                        decoration: BoxDecoration(
-                            color: Color(0xFFC2D2E5),
-                            borderRadius: BorderRadius.circular(180)),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  height: 20,
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 20, right: 10),
-                      width: MediaQuery.of(context).size.width - 100,
-                      child: TextField(
-                        controller: searchController,
-                        decoration: InputDecoration(
-                          hintText: 'Search...',
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      padding: EdgeInsets.all(10),
-                      child: Icon(
-                        Icons.search,
-                        weight: 24,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 1, color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(180),
-                        color: Colors.grey,
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  height: 20,
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(left: 20, right: 20),
-                  width: MediaQuery.of(context).size.width - 50,
-                  height: 200,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        'Promo',
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      )
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Color.fromARGB(255, 194, 210, 229),
-                  ),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  height: 20,
-                )
-              ],
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 20, right: 20),
-              child: Column(
-                children: [
-                  Row(
-=======
         child: RefreshIndicator(
           onRefresh: _onRefresh,
           child: SingleChildScrollView(
@@ -315,59 +139,27 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                   margin: const EdgeInsets.only(top: 20),
                   width: MediaQuery.of(context).size.width,
                   child: Row(
->>>>>>> origin/Faqih-1302220086
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         children: [
                           Container(
-<<<<<<< HEAD
-                            width: 220,
-                            height: 200,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text('Item'),
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(50, 12, 50, 12),
-                                  child: TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Halamanproduk(
-                                                    product: {},
-                                                  )),
-                                        );
-                                      },
-                                      child: Text('Buy Now')),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20)),
-                                )
-                              ],
-                            ),
-                            decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 194, 210, 229),
-                                borderRadius: BorderRadius.circular(20)),
-=======
                             margin: const EdgeInsets.only(left: 20),
                             child: IconButton(
                               icon: const Icon(Icons.menu),
                               onPressed: () {
                                 showMenu(
                                   context: context,
-                                  position: const RelativeRect.fromLTRB(20, 50, 100, 0),
+                                  position: const RelativeRect.fromLTRB(
+                                      20, 50, 100, 0),
                                   items: categories.map((String category) {
                                     return PopupMenuItem<String>(
                                       value: category,
                                       child: TextButton(
-                                        onPressed: () {
-                                          _getProdukByCategory(category);
-                                        }, 
-                                        child: Text(category)
-                                        ),
+                                          onPressed: () {
+                                            _getProdukByCategory(category);
+                                          },
+                                          child: Text(category)),
                                     );
                                   }).toList(),
                                 ).then((String? newValue) {
@@ -379,7 +171,6 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                 });
                               },
                             ),
->>>>>>> origin/Faqih-1302220086
                           ),
                         ],
                       ),
@@ -387,47 +178,17 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           TextButton(
-                            onPressed: _onRefresh, 
-                            child: Image.asset(
-                            'Images/Logo.png',
-                            width: 73,
-                            height: 43,
-                          ))
-                          
+                              onPressed: _onRefresh,
+                              child: Image.asset(
+                                'Images/Logo.png',
+                                width: 73,
+                                height: 43,
+                              ))
                         ],
                       ),
                       Row(
                         children: [
                           Container(
-<<<<<<< HEAD
-                            width: 220,
-                            height: 200,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text('Item'),
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(50, 12, 50, 12),
-                                  child: TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Profile()) //Profile ganti ke class yang dituju
-                                            );
-                                      },
-                                      child: Text('Buy Now')),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20)),
-                                )
-                              ],
-                            ),
-                            decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 194, 210, 229),
-                                borderRadius: BorderRadius.circular(20)),
-=======
                             width: 36,
                             height: 36,
                             margin: const EdgeInsets.only(right: 12),
@@ -456,7 +217,8 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                 onPressed: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => const Chat()),
+                                    MaterialPageRoute(
+                                        builder: (context) => const Chat()),
                                   );
                                 },
                                 icon: const Icon(
@@ -466,7 +228,6 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                 ),
                               ),
                             ),
->>>>>>> origin/Faqih-1302220086
                           ),
                         ],
                       ),
@@ -492,7 +253,8 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const search()),
+                            MaterialPageRoute(
+                                builder: (context) => const search()),
                           );
                         },
                         child: const Row(
@@ -528,7 +290,8 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                         children: [
                           Text(
                             'Promo',
-                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           )
                         ],
@@ -555,7 +318,8 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                           : GridView.builder(
                               shrinkWrap: true,
                               physics: const AlwaysScrollableScrollPhysics(),
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 10,
                                 mainAxisSpacing: 10,
@@ -570,8 +334,10 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         // Gambar Produk
                                         Image.network(
@@ -584,17 +350,20 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                                         // Nama Produk
                                         Text(
                                           products[index]['nama_produk'],
-                                          style: const TextStyle(fontWeight: FontWeight.bold),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold),
                                         ),
                                         // Harga Produk
                                         Text(
                                           'Rp ${products[index]['harga_produk']}',
-                                          style: const TextStyle(color: Colors.green),
+                                          style: const TextStyle(
+                                              color: Colors.green),
                                         ),
                                         // Kategori Produk
                                         Text(
                                           products[index]['kategori'],
-                                          style: const TextStyle(color: Colors.grey),
+                                          style: const TextStyle(
+                                              color: Colors.grey),
                                         ),
                                       ],
                                     ),
