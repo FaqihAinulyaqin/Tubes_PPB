@@ -1,8 +1,5 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'Navbar.dart';
-import 'chat.dart';
 import 'Ulasan.dart';
 
 class Halamanproduk extends StatelessWidget {
@@ -239,12 +236,7 @@ class Halamanproduk extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 5),
                   child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Chat()),
-                      );
-                    },
+                    onPressed: () {},
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(35),
