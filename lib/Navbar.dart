@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'HalamanUtama.dart';
-import 'Wishlist.dart';
-import 'Sell.dart';
 import 'Profile.dart';
+// import 'Wishlist.dart';
+import 'Sell.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({super.key});
@@ -17,7 +18,7 @@ class _NavbarState extends State<Navbar> {
   final List<Widget> _pages = [
     HalamanUtama(),
     Sell(),
-    Wishlist(),
+    // Wishlist(),
     Profile(),
   ];
 
