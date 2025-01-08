@@ -1,9 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:ureveryday_ppb/api/sell_api.dart';
 import 'Navbar.dart';
-import 'package:http/http.dart' as http;
 
 class Sell extends StatefulWidget {
   const Sell({super.key});
@@ -13,26 +14,59 @@ class Sell extends StatefulWidget {
 }
 
 class _SellState extends State<Sell> {
-  List<Map<String, dynamic>> products = [];
   final _formKey = GlobalKey<FormState>();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  final TextEditingController _namaBarang = TextEditingController();
+  final TextEditingController _hargaBarang = TextEditingController();
+  final TextEditingController _stok = TextEditingController();
+  final TextEditingController _kategori = TextEditingController();
+  final TextEditingController _subKategori = TextEditingController();
+  final TextEditingController _deskripsiKategori = TextEditingController();
+
+  List<Map<String, dynamic>> products = [];
   File? _selectedImage;
-
-  Future<void> sendData(products) async {
-    final url = Uri.parse('http://localhost:3000/api/produk/addProduk');
-    final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode(products);
-
-    final response = await http.post(url, headers: headers, body: body);
-
-    if (response.statusCode == 200) {
-      print('Data sent successfully');
-    } else {
-      print('Failed to send data');
-    }
-  }
+  String errMessage = '';
+  bool isLoading = false;
 
   void initState() {
     super.initState();
+    _initializeNotifications();
+  }
+
+  void _initializeNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  void showProfileUpdatedNotification() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'add_product_channel',
+      'add new product Notifications',
+      channelDescription: 'Notifications for add new product',
+      importance: Importance.high,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Yeeey!!!!',
+      'Produk anda sudah ditambahkann!',
+      platformChannelSpecifics,
+    );
   }
 
   Future<void> _pickImage() async {
@@ -41,23 +75,55 @@ class _SellState extends State<Sell> {
 
     if (pickedFile != null) {
       setState(() {
-        _selectedImage = File (pickedFile.path);
+        _selectedImage = File(pickedFile.path);
       });
     }
   }
 
-  void toJson(String img_path, String nama_produk, int harga_produk, int stok,
-      String kategori, String sub_kategori, String deskripsi) {
-    final products = {
-      'img_path': img_path,
-      'nama_produk': nama_produk,
-      'harga_produk': harga_produk,
-      'stok': stok,
-      'kategori': kategori,
-      'sub_kategori': sub_kategori,
-      'deskripsi': deskripsi
-    };
-    sendData(products);
+  Future<void> pickImage(ImageSource source) async {
+    if (source == ImageSource.camera &&
+        !(await Permission.camera.request().isGranted)) {
+      openAppSettings();
+      print("Camera permission denied");
+      return;
+    }
+
+    if (source == ImageSource.gallery &&
+        !(await Permission.photos.request().isGranted)) {
+      openAppSettings();
+      print("Photo library permission denied");
+      return;
+    }
+
+    try {
+      final pickedImage = await ImagePicker().pickImage(source: source);
+      if (pickedImage != null) {
+        setState(() {
+          _selectedImage = File(pickedImage.path);
+        });
+      }
+    } catch (e) {
+      print("Error picking image: $e");
+    }
+  }
+
+  Future<void> _addProduk(
+    String namaproduk,
+    String hargaproduk,
+    String stok,
+    String kategori,
+    String subkategori,
+    String deskripsi,
+    File foto,
+  ) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      var response = await SellApi().addProduk(namaproduk, hargaproduk, stok,
+          kategori, subkategori, deskripsi, foto);
+      if (response['status'] == true) {}
+    } catch (e) {}
   }
 
   @override
@@ -100,6 +166,7 @@ class _SellState extends State<Sell> {
 
                     // Nama Produk
                     TextFormField(
+                      controller: _namaBarang,
                       decoration: const InputDecoration(
                         labelText: 'Nama Produk',
                         border: OutlineInputBorder(),
@@ -115,6 +182,7 @@ class _SellState extends State<Sell> {
 
                     // Harga Produk
                     TextFormField(
+                      controller: _hargaBarang,
                       decoration: const InputDecoration(
                         labelText: 'Harga',
                         border: OutlineInputBorder(),
@@ -134,6 +202,7 @@ class _SellState extends State<Sell> {
 
                     // Stok Produk
                     TextFormField(
+                      controller: _stok,
                       decoration: const InputDecoration(
                         labelText: 'Stok',
                         border: OutlineInputBorder(),
@@ -150,6 +219,7 @@ class _SellState extends State<Sell> {
 
                     // Kategori
                     TextFormField(
+                      controller: _kategori,
                       decoration: const InputDecoration(
                         labelText: 'Kategori',
                         border: OutlineInputBorder(),
@@ -165,6 +235,7 @@ class _SellState extends State<Sell> {
 
                     // Sub Kategori
                     TextFormField(
+                      controller: _subKategori,
                       decoration: const InputDecoration(
                         labelText: 'Sub Kategori',
                         border: OutlineInputBorder(),
@@ -180,6 +251,7 @@ class _SellState extends State<Sell> {
 
                     // Deskripsi
                     TextFormField(
+                      controller: _deskripsiKategori,
                       decoration: const InputDecoration(
                         labelText: 'Deskripsi',
                         border: OutlineInputBorder(),
@@ -205,7 +277,7 @@ class _SellState extends State<Sell> {
                         const SizedBox(height: 10),
                         ElevatedButton.icon(
                           onPressed: () {
-                            // Implement file picker logic here
+                            pickImage(ImageSource.gallery);
                           },
                           icon: const Icon(Icons.upload),
                           label: const Text('Choose File'),
@@ -225,14 +297,13 @@ class _SellState extends State<Sell> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            if (_formKey.currentState?.validate() ?? false) {
-                              // Save
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Produk berhasil disimpan'),
-                                ),
-                              );
-                            }
+                            String namaproduk = _namaBarang.text;
+                            String hargaproduk = _hargaBarang.text;
+                            String stok = _stok.text;
+                            String kategori = _kategori.text;
+                            String subkategori = _subKategori.text;
+                            String deskripsi = _deskripsiKategori.text;
+                            _addProduk(namaproduk, hargaproduk, stok, kategori, subkategori, deskripsi, _selectedImage!);
                           },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
@@ -248,7 +319,7 @@ class _SellState extends State<Sell> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const Navbar(), 
+                                builder: (context) => const Navbar(),
                               ),
                             );
                           },
