@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ureveryday_ppb/HalamanUtama.dart';
+import 'package:ureveryday_ppb/Navbar.dart';
 import 'package:ureveryday_ppb/api/auth_api.dart';
 
 class Login extends StatefulWidget {
@@ -70,7 +71,7 @@ class _LoginState extends State<Login> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => HalamanUtama()), // Widget untuk pelamar
+                builder: (context) => Navbar()), // Widget untuk pelamar
           );
         }
       } else {

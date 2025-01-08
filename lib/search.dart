@@ -1,211 +1,164 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ureveryday_ppb/halamanproduk.dart';
 
-class search extends StatefulWidget {
-  const search({super.key});
-
+class SearchPage extends StatefulWidget {
   @override
-  SearchState createState() => SearchState();
+  _SearchPageState createState() => _SearchPageState();
 }
 
-class SearchState extends State<search> {
+class _SearchPageState extends State<SearchPage> {
+  TextEditingController _controller = TextEditingController();
+  List<Map<String, dynamic>> _products = [];
+  bool _isLoading = false;
+  final String apiUrl = dotenv.env['API_URL'].toString();
+
+  // Fungsi untuk memanggil API pencarian produk
+  Future<void> _searchProduk(String searchTerm) async {
+    final url =
+        Uri.parse('$apiUrl/api/search/searchProduk?searchTerm=$searchTerm');
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['data'] != null) {
+          setState(() {
+            _products = List<Map<String, dynamic>>.from(data['data']);
+            _isLoading = false;
+          });
+        }
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        throw Exception('Failed to load products');
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      print("Error: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 20.0),
-          child: Container(
-            width: 40.0,
-            height: 40.0,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color(0xFFC2D2E6),
-            ),
-            child: Center(
-              child: IconButton(
-                icon: const Icon(
-                  Icons.keyboard_arrow_left_outlined,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                ),
-                padding: const EdgeInsets.only(left: 0.0),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          ),
-        ),
-        title: Container(
-          width: 300,
-          height: 49.0,
-          padding: const EdgeInsets.only(right: 20.0),
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'search Here...',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              suffixIcon: const Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ),
+        title: Text('Pencarian Produk'),
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 85,
-                    height: 29,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFC2D2E6),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Sukapura',
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5.0),
-                    child: Container(
-                      width: 85,
-                      height: 29,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFC2D2E6),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Sukabirus',
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5.0),
-                    child: Container(
-                      width: 85,
-                      height: 29,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFC2D2E6),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'DayeuhKolot',
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30), 
-            
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Text(
-                'Recent Searches',
-                style: GoogleFonts.inter(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
+            // TextField untuk mencari produk
+            TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                labelText: 'Cari Produk',
+                labelStyle: TextStyle(color: Colors.blue),
+                filled: true,
+                fillColor: Colors.blue[50],
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.search, color: Colors.blue),
+                  onPressed: () {
+                    _searchProduk(_controller
+                        .text); // Menjalankan pencarian saat ikon search diklik
+                  },
                 ),
               ),
             ),
-            const SizedBox(height: 15),
+            SizedBox(height: 20),
+            // Menampilkan hasil pencarian
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _products.isEmpty
+                      ? const Center(child: Text('Tidak ada Produk Tersedia'))
+                      :  GridView.builder(
+                              shrinkWrap: true,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                              ),
+                              itemCount: _products.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Halamanproduk(
+                                          productId: _products[index]['id'],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue[50],
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          // Gambar Produk
+                                          Image.network(
+                                            _products[index]['img_path'],
+                                            width: 100,
+                                            height: 100,
+                                            fit: BoxFit.cover,
+                                          ),
 
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 85,
-                    height: 29,
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(230, 230, 230, 1),
-                      borderRadius: BorderRadius.circular(15.0)
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Sapu Lidi',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w100
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 30.0),
-
-             Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Text(
-                'Suggessted Product',
-                style: GoogleFonts.inter(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 85,
-                    height: 29,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255),
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(
-                        color: Colors.black,
-                      )
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Album Wendy',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                                          const SizedBox(height: 8),
+                                          // Nama Produk
+                                          Text(
+                                            _products[index]['nama_produk'],
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          // Harga Produk
+                                          Text(
+                                            'Rp ${_products[index]['harga_produk']}',
+                                            style: const TextStyle(
+                                                color: Colors.green),
+                                          ),
+                                          // Kategori Produk
+                                          Text(
+                                            _products[index]['kategori'],
+                                            style: const TextStyle(
+                                                color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
             ),
           ],
         ),

@@ -114,16 +114,55 @@ class _SellState extends State<Sell> {
     String kategori,
     String subkategori,
     String deskripsi,
-    File foto,
+    File? foto,
   ) async {
+    // Validasi untuk memastikan semua field tidak kosong
+    if (namaproduk.isEmpty ||
+        hargaproduk.isEmpty ||
+        stok.isEmpty ||
+        kategori.isEmpty ||
+        foto == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Semua field wajib diisi, termasuk foto."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     try {
+      if (!mounted) return;
       setState(() {
         isLoading = true;
       });
       var response = await SellApi().addProduk(namaproduk, hargaproduk, stok,
           kategori, subkategori, deskripsi, foto);
-      if (response['status'] == true) {}
-    } catch (e) {}
+      
+      if (!mounted) return;
+      if (response['status'] == true) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Navbar()),
+          (route) => false,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Produk berhasil diupload.')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response['message'])),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan saat mengunggah produk.')),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -144,22 +183,86 @@ class _SellState extends State<Sell> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Header with logo
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          'images/Logo.png',
-                          height: 50,
-                        ),
-                        const SizedBox(width: 10),
-                        const Text(
+                        SizedBox(width: 10),
+                        Text(
                           'Upload Produk',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.center, // Pusatkan kolom
+                      children: [
+                        const Text(
+                          'Upload Images',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Validasi apakah gambar sudah diunggah atau belum
+                        if (_selectedImage == null)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: () async {
+                                  await pickImage(ImageSource.gallery);
+                                  setState(() {});
+                                },
+                                icon: const Icon(Icons.upload),
+                                label: const Text('Choose File'),
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                'Maximum 1 image.',
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                'Anda belum mengunggah gambar.',
+                                style:
+                                    TextStyle(color: Colors.red, fontSize: 14),
+                              ),
+                            ],
+                          )
+                        else
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Gambar berhasil diunggah!',
+                                style: TextStyle(
+                                    color: Colors.green, fontSize: 14),
+                              ),
+                              const SizedBox(height: 10),
+                              // Tampilkan preview gambar yang diunggah
+                              Image.file(
+                                _selectedImage!,
+                                width: 200,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              ),
+                              const SizedBox(height: 20),
+                              ElevatedButton.icon(
+                                onPressed: () async {
+                                  // Ganti gambar
+                                  await pickImage(ImageSource.gallery);
+                                  setState(() {});
+                                },
+                                icon: const Icon(Icons.refresh),
+                                label: const Text('Change Image'),
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -266,31 +369,6 @@ class _SellState extends State<Sell> {
                     ),
                     const SizedBox(height: 15),
 
-                    // Upload Image
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Upload Images',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 10),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            pickImage(ImageSource.gallery);
-                          },
-                          icon: const Icon(Icons.upload),
-                          label: const Text('Choose File'),
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Maximum 1 image.',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-
                     // Buttons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -303,7 +381,8 @@ class _SellState extends State<Sell> {
                             String kategori = _kategori.text;
                             String subkategori = _subKategori.text;
                             String deskripsi = _deskripsiKategori.text;
-                            _addProduk(namaproduk, hargaproduk, stok, kategori, subkategori, deskripsi, _selectedImage!);
+                            _addProduk(namaproduk, hargaproduk, stok, kategori,
+                                subkategori, deskripsi, _selectedImage);
                           },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
@@ -334,6 +413,11 @@ class _SellState extends State<Sell> {
                         ),
                       ],
                     ),
+                    if (isLoading)
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    const SizedBox(height: 150),
                   ],
                 ),
               ),

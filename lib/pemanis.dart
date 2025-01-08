@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'login.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Pemanis extends StatefulWidget {
   const Pemanis({super.key});
@@ -9,12 +10,32 @@ class Pemanis extends StatefulWidget {
   State<Pemanis> createState() => _PemanisState();
 }
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 class _PemanisState extends State<Pemanis> {
+  @override
+  void initState() {
+    super.initState();
+    _requestNotificationPermission();
+  }
+
+  void _requestNotificationPermission() async {
+    final bool? granted = await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
+
+    if (granted != null && !granted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Izin notifikasi ditolak oleh pengguna ')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.only(left: 30, right: 30),
         child: Column(
@@ -61,7 +82,6 @@ class _PemanisState extends State<Pemanis> {
               ),
             ),
             const SizedBox(height: 50),
-
             Center(
               child: OutlinedButton(
                 onPressed: () {
@@ -77,7 +97,8 @@ class _PemanisState extends State<Pemanis> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 30.0, vertical: 15.0),
                 ),
                 child: Text(
                   'Shop Now',

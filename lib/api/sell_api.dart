@@ -41,12 +41,16 @@ class SellApi {
     request.fields['sub_kategori'] = subkategori;
     request.fields['deskripsi'] = deskripsi;
 
-    request.files.add(
-      await http.MultipartFile.fromPath(
-        'foto',
-        foto.path,
-      ),
-    );
+    if (await foto.exists()) {
+      final mimeType = lookupMimeType(foto.path);
+      request.files.add(await http.MultipartFile.fromPath('foto', foto.path,
+          contentType: MediaType.parse(mimeType ?? 'image/*')));
+    } else {
+      return {
+        'status': false,
+        'message': 'anda belum mengupload gambar',
+      };
+    }
 
     try {
       var response = await request.send();
