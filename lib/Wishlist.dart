@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'dart:convert'; // For decoding JSON
-import 'package:http/http.dart' as http; // For making API calls
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:ureveryday_ppb/login.dart';
 import 'halamanproduk.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-final storage = FlutterSecureStorage();
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Wishlist extends StatefulWidget {
   const Wishlist({super.key});
@@ -14,79 +14,82 @@ class Wishlist extends StatefulWidget {
 }
 
 class _WishlistState extends State<Wishlist> {
-  bool isLoading = true; // Indicates if data is loading
-  List<dynamic> products = []; // Store product data
+  bool isLoading = true;
+  List<dynamic> products = [];
+  final String apiUrl = dotenv.env['API_URL'].toString();
 
   @override
   void initState() {
     super.initState();
-    fetchWishlist(); // Fetch wishlist items on initialization
+    fetchWishlist();
   }
 
-  Future<void> fetchWishlist() async {
-    final String url =
-        'http://192.168.0.106:3000/api/wishlist/getWishlist'; // Replace with your local IP
-    final String? token = await storage.read(
-        key: 'jwt_token'); // Get the token from secure storage
+ Future<void> fetchWishlist() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
 
-    print('Fetching wishlist with token: $token'); // Debugging log
-
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
+    if (token == null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Harap login kembali.')),
       );
 
-      print('Response status: ${response.statusCode}'); // Log status
-      print('Response body: ${response.body}'); // Log body
+      return;
+    }
 
-      if (response.statusCode == 200) {
-        setState(() {
-          products =
-              json.decode(response.body)['data']; // Get data from response
-          isLoading = false; // Data has been loaded
-        });
+    final response = await http.get(
+      Uri.parse('$apiUrl/api/wishlist/getWishlist'),
+      headers: {
+        'Authorization': 'Bearer $token', // Header otentikasi
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
+      // Pastikan `data` ada dan merupakan List
+      if (responseData['data'] != null && responseData['data'] is List) {
+        final List<dynamic> data = responseData['data'];
+
+        if (data.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Anda belum menambahkan wishlist')),
+          );
+          setState(() {
+            isLoading = false;
+          });
+        } else {
+          setState(() {
+            isLoading = false;
+            products = data; // Update daftar produk
+          });
+        }
       } else {
-        setState(() {
-          isLoading = false;
-        });
-        print('Failed to load wishlist: ${response.statusCode}');
+        throw Exception("Data tidak valid: ${responseData['data']}");
       }
-    } catch (e) {
+    } else {
       setState(() {
         isLoading = false;
       });
-      print('Error fetching wishlist: $e');
-    }
-  }
-
-  Future<void> removeFromWishlist(String id) async {
-    final String url =
-        'http://192.168.0.106:3000/api/wishlist/removeWishlist/$id'; // Replace with your local IP
-    final String? token = await storage.read(
-        key: 'jwt_token'); // Get the token from secure storage
-
-    try {
-      final response = await http.delete(
-        Uri.parse(url),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
+      final error = json.decode(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal mengambil wishlist: ${error['message']}')),
       );
-
-      if (response.statusCode == 200) {
-        print('Item successfully removed from wishlist');
-      } else {
-        print('Failed to remove item: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error removing item: $e');
     }
+  } catch (e) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Terjadi kesalahan: $e')),
+    );
   }
+}
+
+
+  Future<void> removeFromWishlist(String id) async {}
 
   @override
   Widget build(BuildContext context) {
@@ -183,95 +186,107 @@ class _WishlistState extends State<Wishlist> {
             const SizedBox(height: 10),
             isLoading
                 ? const Center(child: CircularProgressIndicator()) // Loader
-                : Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: products.length,
-                      itemBuilder: (context, i) {
-                        return Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Halamanproduk(product: products[i]),
-                                ),
-                              );
-                            },
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.network(
-                                  products[i][
-                                      "product_imgPath"], // Ensure this key matches your API response
-                                  width: 80,
-                                  height: 80,
-                                  fit: BoxFit.cover,
-                                ),
-                                const SizedBox(width: 20),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        products[i][
-                                            "product_namaProduk"], // Ensure this key matches your API response
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        products[i][
-                                            "product_kategori"], // Ensure this key matches your API response
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      Text(
-                                        products[i][
-                                            "product_hargaProduk"], // Ensure this key matches your API response
-                                        style: const TextStyle(fontSize: 14),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        products[i][
-                                            "product_subKategori"], // Ensure this key matches your API response
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.favorite),
-                                  onPressed: () async {
-                                    await removeFromWishlist(products[i][
-                                        "id"]); // Ensure this key matches your API response
-                                    setState(() {
-                                      products.removeAt(i);
-                                    });
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content:
-                                            Text('Item removed from wishlist'),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
+                : products.isEmpty
+                    ? Center(
+                        child: Text(
+                          'Wishlist Anda kosong.',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey,
                           ),
-                        );
-                      },
-                    ),
-                  ),
+                        ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: products.length,
+                          itemBuilder: (context, i) {
+                            return Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: InkWell(
+                                onTap: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) =>
+                                  //         Halamanproduk(product: products[i]),
+                                  //   ),
+                                  // );
+                                },
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Image.network(
+                                      products[i][
+                                          "product_imgPath"], // Ensure this key matches your API response
+                                      width: 80,
+                                      height: 80,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    const SizedBox(width: 20),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            products[i][
+                                                "product_namaProduk"], // Ensure this key matches your API response
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            products[i][
+                                                "product_kategori"], // Ensure this key matches your API response
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Text(
+                                            products[i][
+                                                "product_hargaProduk"].toString(), // Ensure this key matches your API response
+                                            style:
+                                                const TextStyle(fontSize: 14),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            products[i][
+                                                "product_subKategori"], // Ensure this key matches your API response
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.favorite),
+                                      onPressed: () async {
+                                        await removeFromWishlist(products[i][
+                                            "id"]); // Ensure this key matches your API response
+                                        setState(() {
+                                          products.removeAt(i);
+                                        });
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'Item removed from wishlist'),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
           ],
         ),
       ),
